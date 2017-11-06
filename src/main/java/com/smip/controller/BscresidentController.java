@@ -5,13 +5,17 @@ import com.smip.error.GlobalErrorInfoEnum;
 import com.smip.error.GlobalErrorInfoException;
 import com.smip.entity.ResultJson;
 import com.smip.service.account.BscresidentService;
+import com.smip.ulities.GlobalConstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,10 +28,11 @@ public class BscresidentController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @GetMapping(value = "/")
-    public List<Bscresident> findAll(){
+    public ResultJson findAll(){
         List<Bscresident> ps = bscresidentService.findAll();
         System.out.println(ps.size());
-        return ps;
+        ResultJson json = new ResultJson(ps, GlobalConstance.RESULTJSON_TYPE_LIST_OBJECT,"test list json");
+        return json;
     }
 
     @GetMapping(value = "/query/{id}")
@@ -66,5 +71,15 @@ public class BscresidentController {
     @GetMapping(value = "/globalerror")
     public ResultJson testError()  throws GlobalErrorInfoException {
         throw new GlobalErrorInfoException(GlobalErrorInfoEnum.NOT_FOUND);
+    }
+
+    @PostMapping(value = "/post")
+    public @ResponseBody ResultJson testPost(Bscresident bscresident ){
+        System.out.println(bscresident.toString());
+        ResultJson json = new ResultJson(bscresident);
+        System.out.println(json);
+        json.setResult(null);
+        json.setDiscribe("post test success");
+        return json;
     }
 }
