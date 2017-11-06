@@ -60,7 +60,7 @@ public class BscresidentController {
         person1.setCode("dfsdf23232");
         person1.setName("dfsd");
         bscresidentService.save(person1);
-        System.out.println("success");
+        System.out.println("success");//dsfsf
     }
 
     @GetMapping(value = "/globalerror")
