@@ -1,0 +1,3 @@
+# smip-mini
+new version of smip
+the shortlist will coming later...
