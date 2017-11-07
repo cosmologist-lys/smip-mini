@@ -5,6 +5,7 @@ server:
     timeout: 7200
   tomcat:
     uri-encoding: utf-8
+  max-http-header-size: 16384
 spring:
   mvc:
     throw-exception-if-no-handler-found: true
