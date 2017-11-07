@@ -3,17 +3,16 @@ package com.smip.entity;
 import com.smip.error.ErrorInfoInterface;
 import com.smip.error.GlobalErrorInfoEnum;
 import com.smip.ulities.GlobalConstance;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * 统一返回JSON格式
  * 成功时返回对象+code+message
  * 失败时返回code+message+url
  */
-public class ResultJson {
+public class ResultJson  {
     private boolean success;
     private String code;
     private String message;
@@ -22,22 +21,33 @@ public class ResultJson {
     private String jsonType;
     private Object result;
 
-    public ResultJson(ErrorInfoInterface errorInfo,HttpServletRequest req) {
+    public ResultJson(HttpServletRequest req) {
         this.success = false;
-        this.code = errorInfo.getCode();
-        this.message = errorInfo.getMessage();
+        this.code = GlobalErrorInfoEnum.NOT_FOUND.getCode();
+        this.message = GlobalErrorInfoEnum.NOT_FOUND.getMessage();
         this.url = req.getRequestURL().toString();
     }
 
-    public ResultJson(Object result,String type,String discribe) {
+    /**
+     *  完整constructor
+     * @param 对象entity
+     * @param httpstatus状态。NULL时默认
+     * @param jsontype=object or list<object>
+     * @param json描述信息
+     */
+    public ResultJson(Object result, HttpStatus status,String type, String discribe) {
         this.success = true;
-        this.code = GlobalErrorInfoEnum.SUCCESS.getCode();
+        this.code = status==null?GlobalErrorInfoEnum.SUCCESS.getCode():status.toString();
         this.message = GlobalErrorInfoEnum.SUCCESS.getMessage();
         this.jsonType = type;
         this.discribe = discribe;
         this.result = result;
     }
 
+    /**
+     * 偷懒，只需要传入entity对象
+     * @param entity
+     */
     public ResultJson(Object result) {
         this.success = true;
         this.code = GlobalErrorInfoEnum.SUCCESS.getCode();

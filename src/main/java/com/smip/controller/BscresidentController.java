@@ -1,21 +1,23 @@
 package com.smip.controller;
 
-import com.smip.entity.Bscresident;
+import com.smip.entity.account.Bscresident;
+import com.smip.error.ErrorInfoInterface;
 import com.smip.error.GlobalErrorInfoEnum;
 import com.smip.error.GlobalErrorInfoException;
 import com.smip.entity.ResultJson;
 import com.smip.service.account.BscresidentService;
 import com.smip.ulities.GlobalConstance;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.spel.SpelEvaluationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,21 +28,40 @@ public class BscresidentController {
     private BscresidentService bscresidentService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+    private ResultJson json;
+    private String discribe;
 
-    @GetMapping(value = "/")
+    public String getDiscribe() {
+        return discribe;
+    }
+
+    public void setDiscribe(String discribe) {
+        this.discribe = discribe;
+    }
+
+    public ResultJson getJson() {
+        return json;
+    }
+
+    public void setJson(ResultJson json) {
+        this.json = json;
+    }
+/*@GetMapping(value = "/")
     public ResultJson findAll(){
         List<Bscresident> ps = bscresidentService.findAll();
         System.out.println(ps.size());
-        ResultJson json = new ResultJson(ps, GlobalConstance.RESULTJSON_TYPE_LIST_OBJECT,"test list json");
+        ResultJson json = new ResultJson(ps, HttpStatus.OK,GlobalConstance.RESULTJSON_TYPE_LIST_OBJECT,"test list json");
         return json;
     }
 
     @GetMapping(value = "/query/{id}")
-    public ResultJson findOne(@PathVariable("id") Integer id){
+    @ApiOperation(value = "根据id查询",httpMethod = "GET")
+    public ResponseEntity findOne(@PathVariable("id") Integer id){
         Bscresident person = bscresidentService.findOne(new Integer(id));
         System.out.println(person.toString());
         ResultJson json = new ResultJson(person);
-        return json;
+        ResponseEntity entity = new ResponseEntity(person, HttpStatus.OK);
+        return entity;
     }
 
     @GetMapping(value = "/name={conditions}")
@@ -81,5 +102,36 @@ public class BscresidentController {
         json.setResult(null);
         json.setDiscribe("post test success");
         return json;
+    }*/
+
+    //以下测试swagger2
+    @ApiOperation(value="获取用户列表", notes="")
+    @RequestMapping(value="/", method=RequestMethod.GET)
+    public ResultJson findAll(HttpServletRequest req){
+        logger.debug(req.getRequestURI(),"findAll()");
+        List<Bscresident> bscresidentList = bscresidentService.findAll();
+        if (bscresidentList != null && bscresidentList.size()>0){
+            discribe = "swagger2 test query all";
+            json = new ResultJson(bscresidentList,HttpStatus.OK,GlobalConstance.RESULTJSON_TYPE_LIST_OBJECT,discribe);
+        }else{
+            json = new ResultJson(req);
+        }
+        return json;
     }
+
+    @ApiOperation(value="获取单个用户", notes="")
+    @RequestMapping(value="/{id}", method=RequestMethod.GET)
+    public ResultJson findOne(@PathVariable("id") Integer id, HttpServletRequest req){
+        logger.debug(req.getRequestURI(),"findOne(id)");
+        Bscresident bscresident = bscresidentService.findOne(id);
+        discribe = "swagger 2 test query one by id";
+        if (bscresident == null)
+            json = new ResultJson(req);
+        else
+            json = new ResultJson(bscresident,HttpStatus.OK,GlobalConstance.RESULTJSON_TYPE_OBJECT,discribe);
+        return json;
+    }
+
+
+
 }

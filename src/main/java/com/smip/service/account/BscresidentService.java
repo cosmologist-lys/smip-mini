@@ -1,8 +1,6 @@
 package com.smip.service.account;
 
-import com.smip.entity.Bscresident;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.smip.entity.account.Bscresident;
 
 import java.util.List;
 

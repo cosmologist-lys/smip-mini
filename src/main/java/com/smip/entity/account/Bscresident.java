@@ -1,13 +1,14 @@
-package com.smip.entity;
+package com.smip.entity.account;
 
 import org.hibernate.criterion.Example;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-public class Bscresident{
+public class Bscresident implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "BSCRESIDENT_ID_SEQ" )
     @SequenceGenerator(sequenceName = "BSCRESIDENT_ID_SEQ", allocationSize = 1, name = "BSCRESIDENT_ID_SEQ")
