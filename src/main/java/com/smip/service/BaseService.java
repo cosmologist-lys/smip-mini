@@ -15,6 +15,7 @@ public interface BaseService<T> {
 
     List<T> findAll();
     Page<T> findAllByPage(int curPage, int maxPerPage);
+    Page<T> findListByObject(T t,Pageable pageable);
 
     void deleteList(List<T> ts);
     void deleteOne(Integer id);
@@ -24,6 +25,7 @@ public interface BaseService<T> {
     int count(T t);
 
     boolean exist(T t);
+    boolean exist(int id);
 
     T save(T t);
     List<T> save(List<T> t);

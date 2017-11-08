@@ -6,12 +6,12 @@ import com.smip.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.*;
+import org.springframework.expression.spel.SpelEvaluationException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Created by kepler@gmail.com on 2017/11/7.
- */
+
 public class BaseServiceImpl<T> implements BaseService<T> {
     @Autowired
     BaseRepository<T> baseRepository;
@@ -44,21 +44,25 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
+    @Transactional(rollbackFor = {SpelEvaluationException.class,Exception.class})
     public void deleteList(List<T> ts) {
 
     }
 
     @Override
+    @Transactional(rollbackFor = {SpelEvaluationException.class,Exception.class})
     public void deleteOne(Integer id) {
-
+        baseRepository.delete(id);
     }
 
     @Override
+    @Transactional(rollbackFor = {SpelEvaluationException.class,Exception.class})
     public void deleteOne(T t) {
-
+        baseRepository.delete(t);
     }
 
     @Override
+    @Transactional(rollbackFor = {SpelEvaluationException.class,Exception.class})
     public int count() {
         return ((int) baseRepository.count());
     }
@@ -76,12 +80,26 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
+    @Transactional(rollbackFor = {SpelEvaluationException.class,Exception.class})
     public T save(T t) {
-        return null;
+        return baseRepository.save(t);
     }
 
     @Override
-    public List<T> save(List<T> t) {
-        return null;
+    @Transactional(rollbackFor = {SpelEvaluationException.class,Exception.class})
+    public List<T> save(List<T> ts) {
+        return baseRepository.save(ts);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {SpelEvaluationException.class,Exception.class})
+    public Page<T> findListByObject(T t,Pageable pageable) {
+        Example<T> ex = Example.of(t);
+        return baseRepository.findAll(ex,pageable);
+    }
+
+    @Override
+    public boolean exist(int id) {
+        return baseRepository.exists(id);
     }
 }
