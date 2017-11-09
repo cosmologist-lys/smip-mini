@@ -9,28 +9,32 @@ import static oracle.jdbc.driver.OracleLog.byteToHexString;
  */
 public class StringTools {
 
-    private static String byteArrayToHexString(byte[] b) {
-        StringBuffer resultSb = new StringBuffer();
-
-        for (int i = 0; i < b.length; i++) {
-            resultSb.append(byteToHexString(b[i]));
-        }
-
-        return resultSb.toString();
-    }
-
     public static String md5(String origin) {
-        String resultString = null;
-
+        String md5 = "";
         try {
-            resultString = new String(origin);
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            resultString = byteArrayToHexString(md.digest(resultString
-                    .getBytes()));
-        } catch (Exception ex) {
+            MessageDigest md = MessageDigest.getInstance("MD5");  // 创建一个md5算法对象
+            byte[] messageByte = origin.getBytes("UTF-8");
+            byte[] md5Byte = md.digest(messageByte);              // 获得MD5字节数组,16*8=128位
+            md5 = bytesToHex(md5Byte);                            // 转换为16进制字符串
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        return resultString;
+        return md5;
+    }
+    public static String bytesToHex(byte[] bytes) {
+        StringBuffer hexStr = new StringBuffer();
+        int num;
+        for (int i = 0; i < bytes.length; i++) {
+            num = bytes[i];
+            if(num < 0) {
+                num += 256;
+            }
+            if(num < 16){
+                hexStr.append("0");
+            }
+            hexStr.append(Integer.toHexString(num));
+        }
+        return hexStr.toString().toUpperCase();
     }
 
 }
