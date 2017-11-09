@@ -6,9 +6,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-/**
- * Created by kepler@gmail.com on 2017/11/7.
- */
+
 public interface BaseService<T> {
     T findOne(Integer id);
     T findOne(T t);

@@ -1,6 +1,5 @@
 package com.smip.serviceImpl;
 
-import com.smip.entity.account.Bscresident;
 import com.smip.repository.BaseRepository;
 import com.smip.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;

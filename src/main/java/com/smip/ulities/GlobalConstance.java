@@ -19,4 +19,6 @@ public class GlobalConstance {
     public static final String CONTROLLER_NAME_saveListObject = "保存多个对象";
     public static final String CONTROLLER_NAME_deleteObject = "根据条件删除单个对象";
     public static final String CONTROLLER_NAME_deleteListByObject = "根据条件删除多个对象";
+
+    public static final int TOKEN_EXPIRES_HOUR = 3;
 }

@@ -4,13 +4,23 @@ package com.smip.ulities;
  * Created by kepler@gmail.com on 2017/11/8.
  */
 public class webComponent {
+    /**
+     * 得到方法名
+     * @return
+     */
     public static String getMethodName(){
-        StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
-        StackTraceElement e = stacktrace[2];
-        String methodName = e.getMethodName();
-        return methodName;
+//        StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+//        StackTraceElement e = stacktrace[2];
+//        String methodName = e.getMethodName();
+//        return methodName;
+        return Thread.currentThread().getStackTrace()[2].getMethodName();
     }
 
+    /**
+     * 根据方法名得到方法中文描述(对baseController公用方法),返回json用
+     * @param methodname
+     * @return
+     */
     public static String getMethodDiscribe(String methodname){
         if (methodname == null) return null;
         String chinese = "";
