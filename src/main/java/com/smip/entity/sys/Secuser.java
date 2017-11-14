@@ -13,9 +13,11 @@ public class Secuser implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SECUSER_ID_SEQ" )
     @SequenceGenerator(sequenceName = "SECUSER_ID_SEQ", allocationSize = 1, name = "SECUSER_ID_SEQ")
     @Column(name = "id",nullable = false)
-    private int id;
+    private Integer id;
+    @Column(name="username")
     private String userName;
     @NotNull
+    @Column(name="password")
     private String passWord;
     @NotNull
     private String name;
@@ -25,6 +27,7 @@ public class Secuser implements Serializable {
     @NotNull
     private String roles;
     @NotNull
+    @Column(name="stopflag")
     private String stopFlag;
     private String shortcut;
     @Transient
@@ -54,11 +57,11 @@ public class Secuser implements Serializable {
         this.token = token;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
