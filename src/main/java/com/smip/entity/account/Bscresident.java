@@ -1,7 +1,5 @@
 package com.smip.entity.account;
 
-import org.hibernate.criterion.Example;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

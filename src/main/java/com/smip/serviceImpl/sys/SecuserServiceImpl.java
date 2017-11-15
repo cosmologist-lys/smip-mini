@@ -12,5 +12,14 @@ import static java.util.Collections.emptyList;
 
 @Service
 public class SecuserServiceImpl extends BaseServiceImpl<Secuser> implements SecuserService {
+    @Autowired
+    private SecuserRepository secuserRepository;
 
+    @Override
+    public Secuser findByName(String username) {
+        Secuser user = new Secuser();
+        user.setUserName(username);
+        Example<Secuser> ex = Example.of(user);
+        return secuserRepository.findOne(ex);
+    }
 }

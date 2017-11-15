@@ -5,5 +5,5 @@ import com.smip.service.BaseService;
 
 
 public interface SecuserService extends BaseService<Secuser> {
-
+    Secuser findByName(String username);
 }
