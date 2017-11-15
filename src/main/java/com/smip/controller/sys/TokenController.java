@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 @Api(value = "/users",description = "用户登陆",produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
