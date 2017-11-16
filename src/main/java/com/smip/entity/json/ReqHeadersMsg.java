@@ -1,4 +1,5 @@
-package com.smip.entity;
+package com.smip.entity.json;
+
 
 /**
  * 请求验证头部
@@ -10,6 +11,7 @@ public class ReqHeadersMsg {
     private String psw;
     private String enPsw;
     private String uri;
+
 
     public ReqHeadersMsg(String username, boolean valid, String psw, String enPsw, String uri) {
         this.username = username;

@@ -1,8 +1,9 @@
-package com.smip.entity;
+package com.smip.entity.json;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
 
+import java.util.Objects;
 
 
 /**
@@ -10,14 +11,14 @@ import org.springframework.util.MultiValueMap;
  */
 public class FeedbackJson<T> {
     private ReqInfoMsg info;
-    private T obj;
+    private Object targets;
     private HttpStatus httpStatus;
     private MultiValueMap<String,String> headers;
     private int size;
 
-    public FeedbackJson(ReqInfoMsg info, T t, HttpStatus httpStatus, MultiValueMap<String, String> headers,int size) {
+    public FeedbackJson(ReqInfoMsg info, Object ts, HttpStatus httpStatus, MultiValueMap<String, String> headers,int size) {
         this.info = info;
-        this.obj = t;
+        this.targets = ts;
         this.httpStatus = httpStatus;
         this.headers = headers;
         this.size = size;
@@ -38,7 +39,7 @@ public class FeedbackJson<T> {
     public String toString() {
         return "FeedbackJson{" +
                 "info=" + info +
-                ", obj=" + obj +
+                ", obj=" + targets +
                 ", httpStatus=" + httpStatus +
                 ", headers=" + headers +
                 '}';
@@ -52,12 +53,12 @@ public class FeedbackJson<T> {
         this.info = info;
     }
 
-    public T getObj() {
-        return obj;
+    public Object getTargets() {
+        return targets;
     }
 
-    public void setObj(T obj) {
-        this.obj = obj;
+    public void setTargets(Object targets) {
+        this.targets = targets;
     }
 
     public HttpStatus getHttpStatus() {

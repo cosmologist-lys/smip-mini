@@ -1,4 +1,4 @@
-package com.smip.entity;
+package com.smip.entity.json;
 
 import java.util.Date;
 

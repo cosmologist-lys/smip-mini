@@ -1,7 +1,7 @@
 package com.smip.controller.sys;
 
 import com.smip.controller.BaseController;
-import com.smip.entity.ReqHeadersMsg;
+import com.smip.entity.json.ReqHeadersMsg;
 import com.smip.entity.sys.Secuser;
 import com.smip.service.sys.SecuserService;
 import io.swagger.annotations.Api;

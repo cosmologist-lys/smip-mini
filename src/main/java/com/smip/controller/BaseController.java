@@ -1,20 +1,21 @@
 package com.smip.controller;
 
-import com.smip.entity.FeedbackJson;
-import com.smip.entity.ReqHeadersMsg;
-import com.smip.entity.ReqInfoMsg;
+import com.smip.entity.json.FeedbackJson;
+import com.smip.entity.json.ReqHeadersMsg;
+import com.smip.entity.json.ReqInfoMsg;
 import com.smip.entity.sys.Secuser;
 import com.smip.service.sys.SecuserService;
-import com.smip.ulities.GlobalConstance;
 import com.smip.ulities.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by kepler@gmail.com on 2017/11/8.
@@ -40,10 +41,34 @@ public class BaseController<T> {
         return header;
     }
 
+    /**
+     * 返回单个object
+     * @return
+     */
     public FeedbackJson<T> OK(String describe,T t,ReqHeadersMsg header,String type,int size){
         ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
-        return new FeedbackJson(infoMsg,t, HttpStatus.OK,null,size);
+        if (null != t){
+            return new FeedbackJson(infoMsg,t, HttpStatus.OK,null,size);
+        }else
+            return new FeedbackJson(infoMsg,null, HttpStatus.OK,null,size);
     }
+    /**
+     * 返回Page<object>
+     * @return
+     */
+    public FeedbackJson<T> OK(String describe, Page<T> ts, ReqHeadersMsg header, String type, int size){
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
+        return new FeedbackJson(infoMsg,ts, HttpStatus.OK,null,size);
+    }
+    /**
+     * 返回int
+     * @return
+     */
+    public FeedbackJson<T> OK(String describe,ReqHeadersMsg header,String type,int size){
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
+        return new FeedbackJson(infoMsg,null, HttpStatus.OK,null,size);
+    }
+
 
     public FeedbackJson<T> FORBIDDEN(ReqHeadersMsg header){
         ReqInfoMsg infoMsg = getInfoMsg(null,header,null);

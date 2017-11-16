@@ -2,23 +2,24 @@ package com.smip.controller.account;
 
 
 import com.smip.controller.BaseController;
-import com.smip.entity.FeedbackJson;
-import com.smip.entity.ReqHeadersMsg;
-import com.smip.entity.ReqInfoMsg;
+import com.smip.entity.json.FeedbackJson;
+import com.smip.entity.json.ReqHeadersMsg;
 import com.smip.entity.account.Bscresident;
 import com.smip.service.account.BscresidentService;
 import com.smip.ulities.GlobalConstance;
 import com.smip.ulities.webComponent;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import java.util.List;
 
 @Api(value = "/resident",description = "居民信息",produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
@@ -37,14 +38,14 @@ public class BscresidentController extends BaseController<Bscresident>{
 
     @ApiOperation(value="获取单个居民", notes="" ,response = FeedbackJson.class)
     @RequestMapping(value="/query/{id}", method= RequestMethod.GET)
-    public FeedbackJson<Bscresident> querySingleById(@PathVariable("id") Integer id, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
+    public FeedbackJson querySingleById(@PathVariable("id") int id, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         Bscresident person = bscresidentService.findOne(id);
         if (null != person)
-            return OK(describe,person,header,GlobalConstance.RESULTJSON_TYPE_OBJECT,1);
+            return OK(describe,person,header,GlobalConstance.JSON_TYPE_OBJECT,1);
         else
-            return NOTFOUND(describe,header,GlobalConstance.RESULTJSON_TYPE_OBJECT);
+            return NOTFOUND(describe,header,GlobalConstance.JSON_TYPE_OBJECT);
     }
 
    @ApiOperation(value="查询居民总条数", notes="",response = FeedbackJson.class)
@@ -54,23 +55,30 @@ public class BscresidentController extends BaseController<Bscresident>{
         if (!header.isValid()) return FORBIDDEN(header);
         int total = bscresidentService.count();
         if (total > 0)
-            return OK(describe,null,header,GlobalConstance.RESULTJSON_TYPE_INTEGER,total);
+            return OK(describe,header,GlobalConstance.JSON_TYPE_INTEGER,total);
         else
-            return NOTFOUND(describe,header,GlobalConstance.RESULTJSON_TYPE_INTEGER);
+            return NOTFOUND(describe,header,GlobalConstance.JSON_TYPE_INTEGER);
+    }
+
+    @ApiOperation(value="根据条件查询居民个数", notes="",response = FeedbackJson.class)
+    @RequestMapping(value="/count/one", method=RequestMethod.POST)
+    public FeedbackJson countByObject(@ModelAttribute("tokenModel") ReqHeadersMsg header,@RequestBody Bscresident bscresident) {
+        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        int total = bscresidentService.count(bscresident);
+        return OK(describe,header,GlobalConstance.JSON_TYPE_INTEGER,total);
+    }
+
+    @ApiOperation(value="根据PAGE查询多个居民", notes="",response = FeedbackJson.class)
+    @RequestMapping(value="/query/{page}/{size}", method=RequestMethod.GET)
+    public FeedbackJson queryListByObject(@PathVariable("page") int page, @PathVariable("size") int size,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
+        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        Pageable pageable = new PageRequest(page,size, Sort.Direction.DESC,"id");
+        Page<Bscresident> persons = bscresidentService.findListByObject(new Bscresident(),pageable);
+        return OK(describe,persons,header,GlobalConstance.JSON_TYPE_LIST_OBJECT,persons.getSize());
     }
 /*
-    @ApiOperation(value="根据条件查询居民个数", notes="",response = ResultJson.class)
-    @RequestMapping(value="/count/one", method=RequestMethod.POST)
-    public ResultJson countByObject(Bscresident bscresident, HttpServletRequest req) {
-        return super.countByObject(bscresident, req);
-    }
-
-    @ApiOperation(value="根据条件查询多个居民", notes="",response = ResultJson.class)
-    @RequestMapping(value="/query/page={page}&size={size}", method=RequestMethod.POST)
-    public ResultJson queryListByObject(Bscresident bscresident,@PathVariable("page") int page, @PathVariable("size") int size, HttpServletRequest req) {
-        return super.queryListByObject(bscresident, page, size, req);
-    }
-
     @ApiOperation(value="根据id查找居民是否存在", notes="",response = ResultJson.class)
     @RequestMapping(value="/exist/{id}", method=RequestMethod.GET)
     public ResultJson checkExistById(@PathVariable("id") int id, HttpServletRequest req) {

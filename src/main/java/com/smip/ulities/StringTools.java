@@ -13,7 +13,7 @@ public class StringTools {
         String md5 = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");  // 创建一个md5算法对象
-            byte[] messageByte = origin.getBytes("UTF-8");
+            byte[] messageByte = origin.getBytes("utf-8");
             byte[] md5Byte = md.digest(messageByte);              // 获得MD5字节数组,16*8=128位
             md5 = bytesToHex(md5Byte).toLowerCase();                            // 转换为16进制字符串
         } catch (Exception e) {

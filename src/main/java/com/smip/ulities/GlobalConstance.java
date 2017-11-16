@@ -3,11 +3,11 @@ package com.smip.ulities;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
 public class GlobalConstance {
-    public static final String RESULTJSON_TYPE_OBJECT = "OBJECT";
-    public static final String RESULTJSON_TYPE_LIST_OBJECT = "LIST<OBJECT>";
-    public static final String RESULTJSON_TYPE_PAGE_OBJECT = "PAGE<OBJECT>";
-    public static final String RESULTJSON_TYPE_BOOLEAN = "BOOLEAN";
-    public static final String RESULTJSON_TYPE_INTEGER = "INTEGER";
+    public static final String JSON_TYPE_OBJECT = "OBJECT";
+    public static final String JSON_TYPE_LIST_OBJECT = "LIST<OBJECT>";
+    public static final String JSON_TYPE_PAGE_OBJECT = "PAGE<OBJECT>";
+    public static final String JSON_TYPE_BOOLEAN = "BOOLEAN";
+    public static final String JSON_TYPE_INTEGER = "INTEGER";
 
     public static final String CONTROLLER_NAME_querySingleById = "根据ID查找";
     public static final String CONTROLLER_NAME_countAll = "查找所有该对象";
