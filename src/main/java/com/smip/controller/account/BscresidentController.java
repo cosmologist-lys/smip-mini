@@ -27,7 +27,6 @@ import java.util.List;
 public class BscresidentController extends BaseController<Bscresident>{
     @Autowired
     private BscresidentService bscresidentService;
-    private FeedbackJson<Bscresident> json;
     private String describe;
 
 
@@ -43,7 +42,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         if (!header.isValid()) return FORBIDDEN(header);
         Bscresident person = bscresidentService.findOne(id);
         if (null != person)
-            return OK(describe,person,header,GlobalConstance.JSON_TYPE_OBJECT,1);
+            return OK(describe,person,header,GlobalConstance.JSON_TYPE_OBJECT);
         else
             return NOTFOUND(describe,header,GlobalConstance.JSON_TYPE_OBJECT);
     }
@@ -78,20 +77,25 @@ public class BscresidentController extends BaseController<Bscresident>{
         Page<Bscresident> persons = bscresidentService.findListByObject(new Bscresident(),pageable);
         return OK(describe,persons,header,GlobalConstance.JSON_TYPE_LIST_OBJECT,persons.getSize());
     }
-/*
-    @ApiOperation(value="根据id查找居民是否存在", notes="",response = ResultJson.class)
+
+    @ApiOperation(value="根据id查找居民是否存在", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/exist/{id}", method=RequestMethod.GET)
-    public ResultJson checkExistById(@PathVariable("id") int id, HttpServletRequest req) {
-        return super.checkExistById(id, req);
+    public FeedbackJson checkExistById(@PathVariable("id") int id,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
+        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        boolean flg = bscresidentService.exist(id);
+        return OK(describe,header,GlobalConstance.JSON_TYPE_BOOLEAN,flg);
     }
 
-    @ApiOperation(value="根据条件查询居民是否存在", notes="",response = ResultJson.class)
+    @ApiOperation(value="根据条件查询居民是否存在", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/exist/one", method=RequestMethod.POST)
-    public ResultJson checkExistByObject(Bscresident bscresident, HttpServletRequest req) {
-        System.out.println(bscresident.toString());
-        return super.checkExistByObject(bscresident, req);
+    public FeedbackJson checkExistByObject(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
+        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        boolean flg = bscresidentService.exist(bscresident);
+        return OK(describe,header,GlobalConstance.JSON_TYPE_BOOLEAN,flg);
     }
-
+/*
     @ApiOperation(value="保存单个居民", notes="",response = ResultJson.class)
     @RequestMapping(value="/save/one", method=RequestMethod.POST)
     public ResultJson saveObject(Bscresident bscresident, HttpServletRequest req) {

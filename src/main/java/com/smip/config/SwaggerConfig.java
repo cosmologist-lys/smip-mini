@@ -15,6 +15,9 @@ import static com.google.common.base.Predicates.or;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 
+/**
+ * swagger2-ui配置
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {

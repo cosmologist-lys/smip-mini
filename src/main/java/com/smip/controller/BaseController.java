@@ -18,7 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by kepler@gmail.com on 2017/11/8.
+ * controller父类。公共函数beforeController验证合法性
+ * 定义OK,FORBIDDEN,NOTFOUND用来返回对应情况下的Feedbackjson对象
  */
 public class BaseController<T> {
     @Autowired
@@ -45,12 +46,12 @@ public class BaseController<T> {
      * 返回单个object
      * @return
      */
-    public FeedbackJson<T> OK(String describe,T t,ReqHeadersMsg header,String type,int size){
+    public FeedbackJson<T> OK(String describe,T t,ReqHeadersMsg header,String type){
         ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
         if (null != t){
-            return new FeedbackJson(infoMsg,t, HttpStatus.OK,null,size);
+            return new FeedbackJson(infoMsg,t, HttpStatus.OK,null);
         }else
-            return new FeedbackJson(infoMsg,null, HttpStatus.OK,null,size);
+            return new FeedbackJson(infoMsg,null, HttpStatus.OK,null);
     }
     /**
      * 返回Page<object>
@@ -64,9 +65,17 @@ public class BaseController<T> {
      * 返回int
      * @return
      */
-    public FeedbackJson<T> OK(String describe,ReqHeadersMsg header,String type,int size){
+    public FeedbackJson<T> OK(String describe,ReqHeadersMsg header,String type,int count){
         ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
-        return new FeedbackJson(infoMsg,null, HttpStatus.OK,null,size);
+        return new FeedbackJson(infoMsg,count, HttpStatus.OK,null);
+    }
+    /**
+     * 返回boolean
+     * @return
+     */
+    public FeedbackJson<T> OK(String describe,ReqHeadersMsg header,String type,boolean flg){
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
+        return new FeedbackJson(infoMsg,flg, HttpStatus.OK,null);
     }
 
 

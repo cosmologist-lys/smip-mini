@@ -24,6 +24,13 @@ public class FeedbackJson<T> {
         this.size = size;
     }
 
+    public FeedbackJson(ReqInfoMsg info, Object targets, HttpStatus httpStatus, MultiValueMap<String, String> headers) {
+        this.info = info;
+        this.targets = targets;
+        this.httpStatus = httpStatus;
+        this.headers = headers;
+    }
+
     public FeedbackJson() {
     }
 

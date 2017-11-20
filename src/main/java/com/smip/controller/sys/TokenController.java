@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+
+/**
+ * tokenController = secuserController
+ */
 @Api(value = "/users",description = "用户登陆",produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 @RequestMapping(value = "/users")
