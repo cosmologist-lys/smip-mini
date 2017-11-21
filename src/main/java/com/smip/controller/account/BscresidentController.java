@@ -47,6 +47,18 @@ public class BscresidentController extends BaseController<Bscresident>{
             return NOTFOUND(describe,header,GlobalConstance.JSON_TYPE_OBJECT);
     }
 
+    @ApiOperation(value="根据条件获取单个居民", notes="" ,response = FeedbackJson.class)
+    @RequestMapping(value="/query/one", method= RequestMethod.POST)
+    public FeedbackJson querySingleById(@RequestBody Bscresident person, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
+        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        Bscresident p = bscresidentService.findOne(person);
+        if (null != p)
+            return OK(describe,p,header,GlobalConstance.JSON_TYPE_OBJECT);
+        else
+            return NOTFOUND(describe,header,GlobalConstance.JSON_TYPE_OBJECT);
+    }
+
    @ApiOperation(value="查询居民总条数", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/count", method=RequestMethod.GET)
     public FeedbackJson countAll(@ModelAttribute("tokenModel") ReqHeadersMsg header) {

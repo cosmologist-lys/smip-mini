@@ -5,6 +5,7 @@ import com.smip.repository.account.BscresidentRepository;
 import com.smip.service.account.BscresidentService;
 import com.smip.serviceImpl.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     private BscresidentRepository bscresidentRepository;
 
     @Override
+    @Cacheable(value = "person")
     public Bscresident findOne(Integer id) {
         return super.findOne(id);
     }
@@ -28,6 +30,7 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     }
 
     @Override
+    @Cacheable(value = "personList")
     public List<Bscresident> findAll() {
         return super.findAll();
     }
@@ -53,11 +56,13 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     }
 
     @Override
+    @Cacheable(value = "personCountAll")
     public int count() {
         return super.count();
     }
 
     @Override
+    @Cacheable(value = "personCount")
     public int count(Bscresident bscresident) {
         return super.count(bscresident);
     }

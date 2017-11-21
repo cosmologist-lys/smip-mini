@@ -5,10 +5,10 @@ import com.smip.repository.sys.SecuserRepository;
 import com.smip.service.sys.SecuserService;
 import com.smip.serviceImpl.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import static java.util.Collections.emptyList;
 
 @Service
 public class SecuserServiceImpl extends BaseServiceImpl<Secuser> implements SecuserService {
@@ -16,6 +16,7 @@ public class SecuserServiceImpl extends BaseServiceImpl<Secuser> implements Secu
     private SecuserRepository secuserRepository;
 
     @Override
+    @Cacheable(value = "secuser",key = "#username")
     public Secuser findByName(String username) {
         Secuser user = new Secuser();
         user.setUserName(username);
