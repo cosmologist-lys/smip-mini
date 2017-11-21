@@ -73,6 +73,17 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     }
 
     @Override
+    public Page<Bscresident> findListByObject(Bscresident bscresident, Pageable pageable) {
+        return super.findListByObject(bscresident, pageable);
+    }
+
+    @Override
+    @Cacheable(value = "personExistFlg")
+    public boolean exist(int id) {
+        return super.exist(id);
+    }
+
+    @Override
     public Bscresident save(Bscresident bscresident) {
         return super.save(bscresident);
     }

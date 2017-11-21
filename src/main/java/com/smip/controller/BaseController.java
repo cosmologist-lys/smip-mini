@@ -5,7 +5,7 @@ import com.smip.entity.json.ReqHeadersMsg;
 import com.smip.entity.json.ReqInfoMsg;
 import com.smip.entity.sys.Secuser;
 import com.smip.service.sys.SecuserService;
-import com.smip.ulities.StringTools;
+import com.smip.ulities.CipherTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 
 /**
  * controller父类。公共函数beforeController验证合法性
@@ -32,7 +31,7 @@ public class BaseController<T> {
         logger.info("tokenModel");
         String username = request.getHeader("username");
         String psw = request.getHeader("psw");
-        String encryptedPsw = StringTools.md5(psw);
+        String encryptedPsw = CipherTool.md5(psw);
         Secuser secuser = secuserService.findByName(username);
         ReqHeadersMsg header = new ReqHeadersMsg(false);
         if (null != secuser){
@@ -90,6 +89,7 @@ public class BaseController<T> {
     }
 
     public ReqInfoMsg getInfoMsg(String describe,ReqHeadersMsg header,String type){
+        header.setPsw(null);
         return  new ReqInfoMsg(describe,new Date(),type,header);
     }
 }

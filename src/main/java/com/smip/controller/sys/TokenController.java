@@ -35,7 +35,7 @@ public class TokenController extends BaseController<Secuser> {
         System.out.println("secuser="+secuser.toString());
         String describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
         String password = (null != secuser && null != secuser.getPassWord())?
-                StringTools.md5(secuser.getPassWord()):"";
+                CipherTool.md5(secuser.getPassWord()):"";
         secuser.setPassWord(password);
         Secuser user = secuserService.findOne(secuser.getId());
         System.out.println("user="+user.toString());

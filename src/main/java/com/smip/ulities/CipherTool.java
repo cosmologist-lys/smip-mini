@@ -7,7 +7,7 @@ import static oracle.jdbc.driver.OracleLog.byteToHexString;
 /**
  * Created by kepler@gmail.com on 2017/11/9.
  */
-public class StringTools {
+public class CipherTool {
 
     public static String md5(String origin) {
         String md5 = "";
