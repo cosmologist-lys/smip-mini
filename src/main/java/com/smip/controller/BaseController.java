@@ -6,6 +6,7 @@ import com.smip.entity.json.ReqInfoMsg;
 import com.smip.entity.sys.Secuser;
 import com.smip.service.sys.SecuserService;
 import com.smip.ulities.CipherTool;
+import com.smip.ulities.briefTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,14 @@ public class BaseController<T> {
         logger.info("tokenModel");
         String username = request.getHeader("username");
         String psw = request.getHeader("psw");
-        String encryptedPsw = CipherTool.md5(psw);
-        Secuser secuser = secuserService.findByName(username);
         ReqHeadersMsg header = new ReqHeadersMsg(false);
-        if (null != secuser){
-            if (secuser.getPassWord().equals(encryptedPsw))
-                header = new ReqHeadersMsg(username,true,psw,encryptedPsw,request.getRequestURI());
+        if (briefTool.notNull(username,psw)){
+            String encryptedPsw = CipherTool.md5(psw);
+            Secuser secuser = secuserService.findByName(username);
+            if (null != secuser){
+                if (secuser.getPassWord().equals(encryptedPsw))
+                    header = new ReqHeadersMsg(username,true,psw,encryptedPsw,request.getRequestURI());
+            }
         }
         return header;
     }
@@ -79,7 +82,8 @@ public class BaseController<T> {
 
 
     public FeedbackJson<T> FORBIDDEN(ReqHeadersMsg header){
-        ReqInfoMsg infoMsg = getInfoMsg(null,header,null);
+        String describe = "没有访问权限";
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header,null);
         return new FeedbackJson(infoMsg,null, HttpStatus.FORBIDDEN,null,0);
     }
 

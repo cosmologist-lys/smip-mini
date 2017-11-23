@@ -96,6 +96,7 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     }
 
     @Override
+    @Cacheable(value = "person_byname")
     public Bscresident findByNameLike(String name) {
         return bscresidentRepository.findByNamelike(name);
     }
