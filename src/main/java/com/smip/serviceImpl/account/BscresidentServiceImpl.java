@@ -7,6 +7,8 @@ import com.smip.serviceImpl.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,5 +93,10 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     @Override
     public List<Bscresident> save(List<Bscresident> t) {
         return super.save(t);
+    }
+
+    @Override
+    public Bscresident findByNameLike(String name) {
+        return bscresidentRepository.findByNamelike(name);
     }
 }

@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Api(value = "/resident",description = "居民信息",produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
@@ -36,7 +35,7 @@ public class BscresidentController extends BaseController<Bscresident>{
     }
 
     @ApiOperation(value="获取单个居民", notes="" ,response = FeedbackJson.class)
-    @RequestMapping(value="/query/{id}", method= RequestMethod.GET)
+    @GetMapping(value="/query/id/{id}")
     public FeedbackJson querySingleById(@PathVariable("id") int id, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
@@ -57,6 +56,15 @@ public class BscresidentController extends BaseController<Bscresident>{
             return OK(describe,p,header,GlobalConstance.JSON_TYPE_OBJECT);
         else
             return NOTFOUND(describe,header,GlobalConstance.JSON_TYPE_OBJECT);
+    }
+
+    @ApiOperation(value="根据name查询居民(模糊匹配)", notes="",response = FeedbackJson.class)
+    @RequestMapping(value="/query/name/{name}", method=RequestMethod.GET)
+    public FeedbackJson queryByNameLike(@PathVariable("name") String name,@ModelAttribute("tokenModel") ReqHeadersMsg header){
+        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        Bscresident person = bscresidentService.findByNameLike(name);
+        return OK(describe,person,header,GlobalConstance.JSON_TYPE_OBJECT);
     }
 
    @ApiOperation(value="查询居民总条数", notes="",response = FeedbackJson.class)
