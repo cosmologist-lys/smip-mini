@@ -90,6 +90,7 @@ public class BaseController<T> {
 
     public ReqInfoMsg getInfoMsg(String describe,ReqHeadersMsg header,String type){
         header.setPsw(null);
-        return  new ReqInfoMsg(describe,new Date(),type,header);
+        ReqInfoMsg msg = new ReqInfoMsg(describe,new Date(),type,header);
+        return  msg;
     }
 }

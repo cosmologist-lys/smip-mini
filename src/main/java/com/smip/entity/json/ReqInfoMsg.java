@@ -14,15 +14,6 @@ public class ReqInfoMsg {
     private Date reqtime;//请求时间
     private String type;
 
-    private ReqHeadersMsg header;
-
-    public ReqHeadersMsg getHeader() {
-        return header;
-    }
-
-    public void setHeader(ReqHeadersMsg header) {
-        this.header = header;
-    }
 
     public ReqInfoMsg(String describe, Date reqtime, String type,ReqHeadersMsg header) {
         this.describe = describe;
