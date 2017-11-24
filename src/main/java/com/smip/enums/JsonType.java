@@ -1,4 +1,4 @@
-package com.smip.ulities;
+package com.smip.enums;
 
 /**
  * Created by kepler@gmail.com on 2017/11/23.
