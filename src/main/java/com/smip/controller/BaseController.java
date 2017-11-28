@@ -30,10 +30,15 @@ public class BaseController<T> {
     @ModelAttribute("tokenModel")
     public ReqHeadersMsg beforeController(HttpServletRequest request){
         logger.info("tokenModel");
-        String username = request.getHeader("username");
-        String psw = request.getHeader("psw");
+        String username = request.getHeader("username"),
+                psw = request.getHeader("psw"),
+                alg = request.getHeader("alg");
+        boolean valid = false;
+        if (briefTool.notNull(alg)){
+
+        }
         ReqHeadersMsg header = new ReqHeadersMsg(false);
-        if (briefTool.notNull(username,psw)){
+        if (briefTool.notNull(username,psw) && valid){
             String encryptedPsw = CipherTool.md5(psw);
             Secuser secuser = secuserService.findByName(username);
             if (null != secuser){

@@ -1,6 +1,5 @@
 package com.smip.ulities;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 public class GlobalConstance {
     public static final String JSON_TYPE_OBJECT = "OBJECT";

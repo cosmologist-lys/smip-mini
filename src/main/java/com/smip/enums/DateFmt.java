@@ -8,5 +8,10 @@ public enum DateFmt {
     YMDHMS,
     HMS,
     YM,
-    MD
+    MD;
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
