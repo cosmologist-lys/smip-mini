@@ -33,9 +33,9 @@ public class TokenController extends BaseController<Secuser> {
     public ResultJson login(@RequestBody Secuser secuser, HttpServletRequest req){
         Assert.notNull(secuser,"secuser cannot be null");
         System.out.println("secuser="+secuser.toString());
-        String describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         String password = (null != secuser && null != secuser.getPassWord())?
-                CipherTool.md5(secuser.getPassWord()):"";
+                Q_Cipher.md5(secuser.getPassWord()):"";
         secuser.setPassWord(password);
         Secuser user = secuserService.findOne(secuser.getId());
         System.out.println("user="+user.toString());

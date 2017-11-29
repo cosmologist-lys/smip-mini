@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BscresidentRepository extends BaseRepository<Bscresident>{
-    @Query(value = "select b from Bscresident b where b.name like ?1%")
+    @Query(value = "select b from Bscresident b where b.name like ?1% or b.name = ?1%")
     Bscresident findByNamelike(@Param("name") String name);
 }

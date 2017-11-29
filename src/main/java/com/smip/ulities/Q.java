@@ -10,7 +10,7 @@ import java.util.Random;
  * 简单工具类
  * Created by kepler@gmail.com on 2017/11/23.
  */
-public class briefTool {
+public class Q {
     /**
      * 判断是否为空
      * @param objs
@@ -121,7 +121,7 @@ public class briefTool {
      * 判断是否为中文
      * @param str
      */
-    public static boolean isChinse(String str) {
+    public static boolean isChinese(String str) {
         byte[] buf = str.getBytes();
         for (byte b : buf) {
             if (b < 0) {

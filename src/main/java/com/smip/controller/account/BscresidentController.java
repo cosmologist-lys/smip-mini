@@ -7,7 +7,8 @@ import com.smip.entity.json.ReqHeadersMsg;
 import com.smip.entity.account.Bscresident;
 import com.smip.service.account.BscresidentService;
 import com.smip.ulities.GlobalConstance;
-import com.smip.ulities.webComponent;
+import com.smip.ulities.Q;
+import com.smip.ulities.Q_Cpnt;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class BscresidentController extends BaseController<Bscresident>{
     @ApiOperation(value="获取单个居民", notes="" ,response = FeedbackJson.class)
     @GetMapping(value="/query/id/{id}")
     public FeedbackJson querySingleById(@PathVariable("id") int id, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
-        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         Bscresident person = bscresidentService.findOne(id);
         if (null != person)
@@ -49,7 +50,7 @@ public class BscresidentController extends BaseController<Bscresident>{
     @ApiOperation(value="根据条件获取单个居民", notes="" ,response = FeedbackJson.class)
     @RequestMapping(value="/query/one", method= RequestMethod.POST)
     public FeedbackJson querySingleById(@RequestBody Bscresident person, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
-        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         Bscresident p = bscresidentService.findOne(person);
         if (null != p)
@@ -61,16 +62,16 @@ public class BscresidentController extends BaseController<Bscresident>{
     @ApiOperation(value="根据name查询居民(模糊匹配)", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/query/name/{name}", method=RequestMethod.GET)
     public FeedbackJson queryByNameLike(@PathVariable("name") String name,@ModelAttribute("tokenModel") ReqHeadersMsg header){
-        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         Bscresident person = bscresidentService.findByNameLike(name);
         return OK(describe,person,header,GlobalConstance.JSON_TYPE_OBJECT);
     }
 
-   @ApiOperation(value="查询居民总条数", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="查询居民总条数", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/count", method=RequestMethod.GET)
     public FeedbackJson countAll(@ModelAttribute("tokenModel") ReqHeadersMsg header) {
-        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         int total = bscresidentService.count();
         if (total > 0)
@@ -82,7 +83,7 @@ public class BscresidentController extends BaseController<Bscresident>{
     @ApiOperation(value="根据条件查询居民个数", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/count/one", method=RequestMethod.POST)
     public FeedbackJson countByObject(@ModelAttribute("tokenModel") ReqHeadersMsg header,@RequestBody Bscresident bscresident) {
-        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         int total = bscresidentService.count(bscresident);
         return OK(describe,header,GlobalConstance.JSON_TYPE_INTEGER,total);
@@ -91,7 +92,7 @@ public class BscresidentController extends BaseController<Bscresident>{
     @ApiOperation(value="根据PAGE查询多个居民", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/query/{page}/{size}", method=RequestMethod.GET)
     public FeedbackJson queryListByObject(@PathVariable("page") int page, @PathVariable("size") int size,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
-        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         Pageable pageable = new PageRequest(page,size, Sort.Direction.DESC,"id");
         Page<Bscresident> persons = bscresidentService.findListByObject(new Bscresident(),pageable);
@@ -101,7 +102,7 @@ public class BscresidentController extends BaseController<Bscresident>{
     @ApiOperation(value="根据id查找居民是否存在", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/exist/{id}", method=RequestMethod.GET)
     public FeedbackJson checkExistById(@PathVariable("id") int id,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
-        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         boolean flg = bscresidentService.exist(id);
         return OK(describe,header,GlobalConstance.JSON_TYPE_BOOLEAN,flg);
@@ -110,7 +111,7 @@ public class BscresidentController extends BaseController<Bscresident>{
     @ApiOperation(value="根据条件查询居民是否存在", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/exist/one", method=RequestMethod.POST)
     public FeedbackJson checkExistByObject(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
-        describe = webComponent.getMethodDiscribe(webComponent.getMethodName());
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         boolean flg = bscresidentService.exist(bscresident);
         return OK(describe,header,GlobalConstance.JSON_TYPE_BOOLEAN,flg);

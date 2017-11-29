@@ -21,7 +21,7 @@ public class Alg {
 
     @Cacheable(value = "alg_key")
     public static String getKey(String alg){
-        if (!briefTool.notNull(alg))return null;
+        if (!Q.notNull(alg))return null;
         String key = alg.toLowerCase().toString();
         switch (key){
             case ALG_K_ARIES:

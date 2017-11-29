@@ -1,12 +1,14 @@
 package com.smip.entity.account;
 
+import com.smip.entity.QueryEntity;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-public class Bscresident implements Serializable{
+public class Bscresident extends QueryEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "BSCRESIDENT_ID_SEQ" )
     @SequenceGenerator(sequenceName = "BSCRESIDENT_ID_SEQ", allocationSize = 1, name = "BSCRESIDENT_ID_SEQ")
@@ -79,6 +81,7 @@ public class Bscresident implements Serializable{
                 ", contractNo='" + contractNo + '\'' +
                 ", contractDate=" + contractDate +
                 ", instDate=" + instDate +
+                ", testInfo='" + testInfo + '\'' +
                 '}';
     }
 

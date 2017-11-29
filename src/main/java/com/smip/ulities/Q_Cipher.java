@@ -10,12 +10,10 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
-import static oracle.jdbc.driver.OracleLog.byteToHexString;
-
 /**
  * Created by kepler@gmail.com on 2017/11/9.
  */
-public class CipherTool {
+public class Q_Cipher {
 
     public static String md5(String origin) {
         String md5 = "";
@@ -71,7 +69,7 @@ public class CipherTool {
      * @throws Exception
      */
     public static byte[] base64Decode(String base64Code) throws Exception{
-        return briefTool.notNull(base64Code) ?  new BASE64Decoder().decodeBuffer(base64Code) : null;
+        return Q.notNull(base64Code) ?  new BASE64Decoder().decodeBuffer(base64Code) : null;
     }
 
     /**
@@ -93,7 +91,7 @@ public class CipherTool {
      * @throws Exception
      */
     public static byte[] md5_(String msg) throws Exception {
-        return briefTool.notNull(msg) ?  md5(msg.getBytes()) : null;
+        return Q.notNull(msg) ?  md5(msg.getBytes()) : null;
     }
 
     /**
@@ -103,7 +101,7 @@ public class CipherTool {
      * @throws Exception
      */
     public static String md5Encrypt(String msg) throws Exception{
-        return briefTool.notNull(msg) ? base64Encode(md5_(msg)) : null;
+        return Q.notNull(msg) ? base64Encode(md5_(msg)) : null;
     }
 
     /**
@@ -160,7 +158,7 @@ public class CipherTool {
      * @throws Exception
      */
     public static String aesDecrypt(String encryptStr, String decryptKey) throws Exception {
-        return briefTool.notNull(encryptStr) ?   aesDecryptByBytes(base64Decode(encryptStr), decryptKey) : null;
+        return Q.notNull(encryptStr) ?   aesDecryptByBytes(base64Decode(encryptStr), decryptKey) : null;
     }
 
     /*public static void main(String[] args) {

@@ -3,7 +3,7 @@ package com.smip.ulities;
 /**
  * Created by kepler@gmail.com on 2017/11/8.
  */
-public class webComponent {
+public class Q_Cpnt {
     /**
      * 得到方法名
      * @return
@@ -25,6 +25,7 @@ public class webComponent {
         if (methodname == null) return null;
         String chinese = "";
         switch (methodname.toUpperCase()){
+            default:chinese = methodname;break;
             case "QUERYSINGLEBYID":
                 chinese = GlobalConstance.CONTROLLER_NAME_querySingleById;
                 break;

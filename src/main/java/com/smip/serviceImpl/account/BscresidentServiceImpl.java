@@ -66,6 +66,11 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     @Override
     @Cacheable(value = "personCount")
     public int count(Bscresident bscresident) {
+        /*if (bscresident.isFuzzyMatch(bscresident))
+            return super.count(bscresident);
+        else {
+
+        }*/
         return super.count(bscresident);
     }
 

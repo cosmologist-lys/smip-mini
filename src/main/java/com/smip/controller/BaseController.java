@@ -5,8 +5,8 @@ import com.smip.entity.json.ReqHeadersMsg;
 import com.smip.entity.json.ReqInfoMsg;
 import com.smip.entity.sys.Secuser;
 import com.smip.service.sys.SecuserService;
-import com.smip.ulities.CipherTool;
-import com.smip.ulities.briefTool;
+import com.smip.ulities.Q_Cipher;
+import com.smip.ulities.Q;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Date;
  * controller父类。公共函数beforeController验证合法性
  * 定义OK,FORBIDDEN,NOTFOUND用来返回对应情况下的Feedbackjson对象
  */
-public class BaseController<T> {
+public class BaseController<T>{
     @Autowired
     private SecuserService secuserService;
 
@@ -33,17 +33,18 @@ public class BaseController<T> {
         String username = request.getHeader("username"),
                 psw = request.getHeader("psw"),
                 alg = request.getHeader("alg");
-        boolean valid = false;
-        if (briefTool.notNull(alg)){
-
+        boolean valid = true;
+        if (Q.notNull(alg)){
+            //// TODO: 2017/11/28
         }
         ReqHeadersMsg header = new ReqHeadersMsg(false);
-        if (briefTool.notNull(username,psw) && valid){
-            String encryptedPsw = CipherTool.md5(psw);
+        if (Q.notNull(username,psw) && valid){
+            String encryptedPsw = Q_Cipher.md5(psw);
             Secuser secuser = secuserService.findByName(username);
             if (null != secuser){
-                if (secuser.getPassWord().equals(encryptedPsw))
+                if (secuser.getPassWord().equals(encryptedPsw)){
                     header = new ReqHeadersMsg(username,true,psw,encryptedPsw,request.getRequestURI());
+                }
             }
         }
         return header;
@@ -57,8 +58,9 @@ public class BaseController<T> {
         ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
         if (null != t){
             return new FeedbackJson(infoMsg,t, HttpStatus.OK,null);
-        }else
+        }else{
             return new FeedbackJson(infoMsg,null, HttpStatus.OK,null);
+        }
     }
     /**
      * 返回Page<object>

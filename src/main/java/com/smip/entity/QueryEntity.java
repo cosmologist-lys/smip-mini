@@ -1,6 +1,10 @@
 package com.smip.entity;
 
 
+import com.smip.ulities.Q;
+
+import javax.persistence.Transient;
+
 /**entity基类
  * 用于控制前台传送数据做CRUD时对属性的控制
  * 规定了字段区间查询，传入对应属性名
@@ -12,12 +16,19 @@ package com.smip.entity;
  * Created by kepler@gmail.com on 2017/11/16.
  */
 public class QueryEntity {
-    private String[] startDate;
-    private String[] endDate;
+    @Transient
+    private String[] startDate;//输入要查询的时间字段名，对应要查询的字段也要输入date
+    @Transient
+    private String[] endDate;//同上
+    @Transient
     private String[] moreThan; //大于。set属性名(对应属性只能为数字类型)
+    @Transient
     private String[] lessThan; //小于。同上
+    @Transient
     private String[] absEquel; //等于。set属性名。该项为空就默认模糊查询(任何类型)
+    @Transient
     private boolean fuzzyMatch;//模糊查询状态,该选项监控所有大于小于查询，若填写了morethan,lessthan该属性false,反之true
+
 
     public String[] getMoreThan() {
         return moreThan;
@@ -55,6 +66,7 @@ public class QueryEntity {
         this.lessThan = str;
     }
 
+
     public String[] getStartDate() {
         return startDate;
     }
@@ -77,5 +89,20 @@ public class QueryEntity {
             str[i] = dateParams[i];
         }
         this.endDate = str;
+    }
+
+    public boolean isFuzzyMatch(QueryEntity entity) {
+        if (Q.notNull(entity)){
+            if (Q.notNull(entity.getAbsEquel())
+                    && Q.notNull(entity.getLessThan())
+                    && Q.notNull(entity.getMoreThan()))
+                this.fuzzyMatch =  false;
+            else this.fuzzyMatch = true;
+        }
+        return this.fuzzyMatch;
+    }
+
+    public void setFuzzyMatch(boolean fuzzyMatch) {
+        this.fuzzyMatch = fuzzyMatch;
     }
 }
