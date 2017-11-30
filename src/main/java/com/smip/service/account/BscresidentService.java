@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface BscresidentService extends BaseService<Bscresident> {
     Bscresident findByNameLike(String name);
+    Bscresident complexFind(String code,String tel);
 }

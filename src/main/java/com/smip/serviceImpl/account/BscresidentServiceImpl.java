@@ -1,9 +1,12 @@
 package com.smip.serviceImpl.account;
 
 import com.smip.entity.account.Bscresident;
+import com.smip.entity.sys.Secuser;
+import com.smip.mapper.account.BscresidentMapper;
 import com.smip.repository.account.BscresidentRepository;
 import com.smip.service.account.BscresidentService;
 import com.smip.serviceImpl.BaseServiceImpl;
+import com.smip.ulities.Q;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
@@ -19,6 +22,11 @@ import java.util.List;
 public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> implements BscresidentService {
     @Autowired
     private BscresidentRepository bscresidentRepository;
+    //private BscresidentMapper bscresidentMapper;
+
+    /*public BscresidentServiceImpl(BscresidentMapper bscresidentMapper) {
+        this.bscresidentMapper = bscresidentMapper;
+    }*/
 
     @Override
     @Cacheable(value = "person")
@@ -105,4 +113,9 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     public Bscresident findByNameLike(String name) {
         return bscresidentRepository.findByNamelike(name);
     }
+    @Override
+    public Bscresident complexFind(String code,String tel){
+        return bscresidentRepository.complexFind(code,tel);
+    }
+
 }

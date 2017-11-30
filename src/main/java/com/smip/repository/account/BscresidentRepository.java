@@ -9,6 +9,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BscresidentRepository extends BaseRepository<Bscresident>{
+    //nativceQuery = true 开启sql查询。false 开启hql查询
+
     @Query(value = "select b from Bscresident b where b.name like ?1% or b.name = ?1%")
     Bscresident findByNamelike(@Param("name") String name);
+
+
+    @Query(value = "SELECT b FROM Bscresident b where b.code= :code and b.tel=:tel")
+    Bscresident complexFind(@Param("code") String code,@Param("tel") String tel);
 }

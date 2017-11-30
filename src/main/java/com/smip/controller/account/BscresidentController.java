@@ -116,6 +116,21 @@ public class BscresidentController extends BaseController<Bscresident>{
         boolean flg = bscresidentService.exist(bscresident);
         return OK(describe,header,GlobalConstance.JSON_TYPE_BOOLEAN,flg);
     }
+
+    @ApiOperation(value="根据条件查询居民", notes="",response = FeedbackJson.class)
+    @RequestMapping(value="/query/condition", method=RequestMethod.GET)
+    public FeedbackJson complexQuery(HttpServletRequest req, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        Bscresident person = new Bscresident();
+        if (Q.notNull(req)){
+            String code = req.getParameter("code");
+            String tel = req.getParameter("tel");
+            System.out.println("code="+code+" tel="+tel);
+            person = bscresidentService.complexFind(code,tel);
+        }
+        return OK(describe,person,header,GlobalConstance.JSON_TYPE_BOOLEAN);
+    }
 /*
     @ApiOperation(value="保存单个居民", notes="",response = ResultJson.class)
     @RequestMapping(value="/save/one", method=RequestMethod.POST)
