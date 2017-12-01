@@ -56,79 +56,79 @@ public class Secuser implements Serializable {
         return token;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public Secuser setToken(String token) {
+        this.token = token;return this;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Secuser setId(Integer id) {
+        this.id = id;return this;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public Secuser setUserName(String userName) {
+        this.userName = userName;return this;
     }
 
     public String getPassWord() {
         return passWord;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public Secuser setPassWord(String passWord) {
+        this.passWord = passWord;return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Secuser setName(String name) {
+        this.name = name;return this;
     }
 
     public String getDeptcode() {
         return deptcode;
     }
 
-    public void setDeptcode(String deptcode) {
-        this.deptcode = deptcode;
+    public Secuser setDeptcode(String deptcode) {
+        this.deptcode = deptcode;return this;
     }
 
     public Integer getDistrictId() {
         return districtId;
     }
 
-    public void setDistrictId(Integer districtId) {
-        this.districtId = districtId;
+    public Secuser setDistrictId(Integer districtId) {
+        this.districtId = districtId;return this;
     }
 
     public String getRoles() {
         return roles;
     }
 
-    public void setRoles(String roles) {
-        this.roles = roles;
+    public Secuser setRoles(String roles) {
+        this.roles = roles;return this;
     }
 
     public String getStopFlag() {
         return stopFlag;
     }
 
-    public void setStopFlag(String stopFlag) {
-        this.stopFlag = stopFlag;
+    public Secuser setStopFlag(String stopFlag) {
+        this.stopFlag = stopFlag;return this;
     }
 
     public String getShortcut() {
         return shortcut;
     }
 
-    public void setShortcut(String shortcut) {
-        this.shortcut = shortcut;
+    public Secuser setShortcut(String shortcut) {
+        this.shortcut = shortcut;return this;
     }
 }

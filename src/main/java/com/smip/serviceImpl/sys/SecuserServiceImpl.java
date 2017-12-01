@@ -18,9 +18,6 @@ public class SecuserServiceImpl extends BaseServiceImpl<Secuser> implements Secu
     @Override
     @Cacheable(value = "secuser",key = "#username")
     public Secuser findByName(String username) {
-        Secuser user = new Secuser();
-        user.setUserName(username);
-        Example<Secuser> ex = Example.of(user);
-        return secuserRepository.findOne(ex);
+        return secuserRepository.findOne(Example.of(new Secuser().setUserName(username)));
     }
 }

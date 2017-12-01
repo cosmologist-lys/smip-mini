@@ -35,8 +35,8 @@ public class BscresidentController extends BaseController<Bscresident>{
         return super.beforeController(request);
     }
 
-    @ApiOperation(value="获取单个居民", notes="" ,response = FeedbackJson.class)
-    @GetMapping(value="/query/id/{id}")
+    @ApiOperation(value="获取单个居民" ,response = FeedbackJson.class)
+    @RequestMapping(value="/query/id/{id}", method= RequestMethod.GET)
     public FeedbackJson querySingleById(@PathVariable("id") int id, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
@@ -47,7 +47,7 @@ public class BscresidentController extends BaseController<Bscresident>{
             return NOTFOUND(describe,header);
     }
 
-    @ApiOperation(value="根据条件获取单个居民", notes="" ,response = FeedbackJson.class)
+    @ApiOperation(value="根据条件获取单个居民" ,response = FeedbackJson.class)
     @RequestMapping(value="/query/one", method= RequestMethod.POST)
     public FeedbackJson querySingleById(@RequestBody Bscresident person, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -59,7 +59,7 @@ public class BscresidentController extends BaseController<Bscresident>{
             return NOTFOUND(describe,header);
     }
 
-    @ApiOperation(value="根据name查询居民(模糊匹配)", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="根据name查询居民(模糊匹配)",response = FeedbackJson.class)
     @RequestMapping(value="/query/name/{name}", method=RequestMethod.GET)
     public FeedbackJson queryByNameLike(@PathVariable("name") String name,@ModelAttribute("tokenModel") ReqHeadersMsg header){
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -68,7 +68,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,person,header);
     }
 
-    @ApiOperation(value="查询居民总条数", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="查询居民总条数",response = FeedbackJson.class)
     @RequestMapping(value="/count", method=RequestMethod.GET)
     public FeedbackJson countAll(@ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -76,7 +76,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,header, bscresidentService.count());
     }
 
-    @ApiOperation(value="根据条件查询居民个数", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="根据条件查询居民个数",response = FeedbackJson.class)
     @RequestMapping(value="/count/one", method=RequestMethod.POST)
     public FeedbackJson countByObject(@ModelAttribute("tokenModel") ReqHeadersMsg header,@RequestBody Bscresident bscresident) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -85,7 +85,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,header,total);
     }
 
-    @ApiOperation(value="根据PAGE查询多个居民", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="根据PAGE查询多个居民",response = FeedbackJson.class)
     @RequestMapping(value="/query/{page}/{size}", method=RequestMethod.GET)
     public FeedbackJson queryListByObject(@PathVariable( "page") int page, @PathVariable("size") int size,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -95,7 +95,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,persons,header,persons.getSize());
     }
 
-    @ApiOperation(value="根据PAGE查询多个居民", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="根据PAGE查询多个居民",response = FeedbackJson.class)
     @RequestMapping(value="/query/sort", method=RequestMethod.GET)
     public FeedbackJson queryListByObject_(@RequestParam(value = "page", required = true, defaultValue = "10") Integer page,
                                            @RequestParam(value = "limit", required = true, defaultValue = "12") Integer limit
@@ -108,7 +108,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,persons,header,persons.getSize());
     }
 
-    @ApiOperation(value="根据id查找居民是否存在", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="根据id查找居民是否存在",response = FeedbackJson.class)
     @RequestMapping(value="/exist/{id}", method=RequestMethod.GET)
     public FeedbackJson checkExistById(@PathVariable("id") int id,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -117,7 +117,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,header,flg);
     }
 
-    @ApiOperation(value="根据条件查询居民是否存在", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="根据条件查询居民是否存在",response = FeedbackJson.class)
     @RequestMapping(value="/exist/one", method=RequestMethod.POST)
     public FeedbackJson checkExistByObject(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -126,7 +126,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,header,flg);
     }
 
-    @ApiOperation(value="根据条件查询居民", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="根据条件查询居民",response = FeedbackJson.class)
     @RequestMapping(value="/query/condition", method=RequestMethod.GET)
     public FeedbackJson complexQuery(HttpServletRequest req, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -141,7 +141,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,person,header);
     }
 
-    @ApiOperation(value="保存单个居民", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="保存单个居民",response = FeedbackJson.class)
     @RequestMapping(value="/save/one", method=RequestMethod.POST)
     public FeedbackJson saveObject(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -154,7 +154,7 @@ public class BscresidentController extends BaseController<Bscresident>{
     }
 
 
-    @ApiOperation(value="根据id删除单个居民", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="根据id删除单个居民",response = FeedbackJson.class)
     @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
     public FeedbackJson deleteObject(@PathVariable("id") int id, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -163,7 +163,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,null,true);
     }
 
-    @ApiOperation(value="根据条件删除单个居民", notes="",response = FeedbackJson.class)
+    @ApiOperation(value="根据条件删除单个居民",response = FeedbackJson.class)
     @RequestMapping(value="/delete/one", method=RequestMethod.DELETE)
     public FeedbackJson deleteObject(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());

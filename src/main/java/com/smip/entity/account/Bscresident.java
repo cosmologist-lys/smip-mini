@@ -90,103 +90,108 @@ public class Bscresident extends QueryEntity implements Serializable{
         return id;
     }
 
-    public void setId(Integer id) {
+    public Bscresident setId(Integer id) {
         this.id = id;
+        return this;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public Bscresident setCode(String code) {
         this.code = code;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Bscresident setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getPinYin() {
         return pinYin;
     }
 
-    public void setPinYin(String pinYin) {
+    public Bscresident setPinYin(String pinYin) {
         this.pinYin = pinYin;
+        return this;
     }
 
     public String getIdNo() {
         return idNo;
     }
 
-    public void setIdNo(String idNo) {
+    public Bscresident setIdNo(String idNo) {
         this.idNo = idNo;
+        return this;
     }
 
     public String getCompany() {
         return company;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    public Bscresident setCompany(String company) {
+        this.company = company;return this;
     }
 
     public String getTel() {
         return tel;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public Bscresident setTel(String tel) {
+        this.tel = tel;return this;
     }
 
     public String getMobile() {
         return mobile;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public Bscresident setMobile(String mobile) {
+        this.mobile = mobile;return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public Bscresident setEmail(String email) {
+        this.email = email;return this;
     }
 
     public String getNote() {
         return note;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public Bscresident setNote(String note) {
+        this.note = note;return this;
     }
 
     public String getContractNo() {
         return contractNo;
     }
 
-    public void setContractNo(String contractNo) {
-        this.contractNo = contractNo;
+    public Bscresident setContractNo(String contractNo) {
+        this.contractNo = contractNo;return this;
     }
 
     public Date getContractDate() {
         return contractDate;
     }
 
-    public void setContractDate(Date contractDate) {
-        this.contractDate = contractDate;
+    public Bscresident setContractDate(Date contractDate) {
+        this.contractDate = contractDate;return this;
     }
 
     public Date getInstDate() {
         return instDate;
     }
 
-    public void setInstDate(Date instDate) {
-        this.instDate = instDate;
+    public Bscresident setInstDate(Date instDate) {
+        this.instDate = instDate;return this;
     }
 }
