@@ -5,8 +5,10 @@ import com.smip.entity.json.ReqHeadersMsg;
 import com.smip.entity.json.ReqInfoMsg;
 import com.smip.entity.sys.Secuser;
 import com.smip.service.sys.SecuserService;
+import com.smip.ulities.GlobalConstance;
 import com.smip.ulities.Q_Cipher;
 import com.smip.ulities.Q;
+import org.apache.ibatis.javassist.expr.Instanceof;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,36 +56,39 @@ public class BaseController<T>{
      * 返回单个object
      * @return
      */
-    public FeedbackJson<T> OK(String describe,T t,ReqHeadersMsg header,String type){
-        ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
+    public FeedbackJson<T> OK(String describe,T t,ReqHeadersMsg header){
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header, t.getClass().getSimpleName());
         if (null != t){
             return new FeedbackJson(infoMsg,t, HttpStatus.OK,null);
         }else{
-            return new FeedbackJson(infoMsg,null, HttpStatus.OK,null);
+            return new FeedbackJson(infoMsg,null, HttpStatus.NOT_FOUND,null);
         }
     }
     /**
      * 返回Page<object>
      * @return
      */
-    public FeedbackJson<T> OK(String describe, Page<T> ts, ReqHeadersMsg header, String type, int size){
-        ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
-        return new FeedbackJson(infoMsg,ts, HttpStatus.OK,null,size);
+    public FeedbackJson<T> OK(String describe, Page<T> ts, ReqHeadersMsg header, int size){
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header,ts.getClass().getSimpleName());
+        if (size > 0)
+            return new FeedbackJson(infoMsg,ts,HttpStatus.OK,null,size);
+        else
+            return new FeedbackJson(infoMsg,ts,HttpStatus.NOT_FOUND,null,size);
     }
     /**
      * 返回int
      * @return
      */
-    public FeedbackJson<T> OK(String describe,ReqHeadersMsg header,String type,int count){
-        ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
+    public FeedbackJson<T> OK(String describe,ReqHeadersMsg header,int count){
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header,GlobalConstance.JSON_TYPE_INTEGER);
         return new FeedbackJson(infoMsg,count, HttpStatus.OK,null);
     }
     /**
      * 返回boolean
      * @return
      */
-    public FeedbackJson<T> OK(String describe,ReqHeadersMsg header,String type,boolean flg){
-        ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
+    public FeedbackJson<T> OK(String describe,ReqHeadersMsg header,boolean flg){
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header,GlobalConstance.JSON_TYPE_BOOLEAN);
         return new FeedbackJson(infoMsg,flg, HttpStatus.OK,null);
     }
 
@@ -94,8 +99,8 @@ public class BaseController<T>{
         return new FeedbackJson(infoMsg,null, HttpStatus.FORBIDDEN,null,0);
     }
 
-    public FeedbackJson<T> NOTFOUND(String describe,ReqHeadersMsg header,String type){
-        ReqInfoMsg infoMsg = getInfoMsg(describe,header,type);
+    public FeedbackJson<T> NOTFOUND(String describe,ReqHeadersMsg header){
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header, GlobalConstance.JSON_TYPE_BOOLEAN);
         return new FeedbackJson(infoMsg,null, HttpStatus.NOT_FOUND,null,0);
     }
 

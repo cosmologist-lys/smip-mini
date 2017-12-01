@@ -12,7 +12,7 @@ suit this project for many situations.
 use the cache manager,default Guava.
 
 ####API-UI:Swagger2
-for the RESTFUL api display.all the infos of apis can display,
+for the RESTFUL api display.all the infos of apis shows on docs,
 include the json callback and the json requirement.
 
 ####Persistance:JPA

@@ -62,7 +62,9 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
 
     @Override
     public void deleteOne(Bscresident bscresident) {
-        super.deleteOne(bscresident);
+        if (Q.notNull(bscresident)){
+            super.deleteOne(bscresident);
+        }
     }
 
     @Override
@@ -88,6 +90,8 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     }
 
     @Override
+    @Cacheable(value = "pagePerson",key = "#root.args[1]")
+    //key=#root.args[index] 当前方法参数组成的数组组成KEY
     public Page<Bscresident> findListByObject(Bscresident bscresident, Pageable pageable) {
         return super.findListByObject(bscresident, pageable);
     }
@@ -117,5 +121,24 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     public Bscresident complexFind(String code,String tel){
         return bscresidentRepository.complexFind(code,tel);
     }
+
+    /*
+    guava:cacheable 更多用法
+    有的时候我们可能并不希望缓存一个方法所有的返回结果。
+    通过condition属性可以实现这一功能。
+    condition属性默认为空，表示将缓存所有的调用情形。
+    其值是通过SpringEL表达式来指定的，当为true时表示进行缓存处理；
+    当为false时表示不进行缓存处理，即每次调用该方法时该方法都会执行一次。
+    如下示例表示只有当user的id为偶数时才会进行缓存。
+
+    @Cacheable(value={"users"}, key="#user.id", condition="#user.id%2==0")
+
+    public User find(User user) {
+
+        System.out.println("find user by user " + user);
+
+        return user;
+
+    }*/
 
 }

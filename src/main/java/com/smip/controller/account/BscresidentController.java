@@ -6,7 +6,6 @@ import com.smip.entity.json.FeedbackJson;
 import com.smip.entity.json.ReqHeadersMsg;
 import com.smip.entity.account.Bscresident;
 import com.smip.service.account.BscresidentService;
-import com.smip.ulities.GlobalConstance;
 import com.smip.ulities.Q;
 import com.smip.ulities.Q_Cpnt;
 import io.swagger.annotations.Api;
@@ -20,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Api(value = "/resident",description = "居民信息",produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
@@ -42,9 +42,9 @@ public class BscresidentController extends BaseController<Bscresident>{
         if (!header.isValid()) return FORBIDDEN(header);
         Bscresident person = bscresidentService.findOne(id);
         if (null != person)
-            return OK(describe,person,header,GlobalConstance.JSON_TYPE_OBJECT);
+            return OK(describe,person,header);
         else
-            return NOTFOUND(describe,header,GlobalConstance.JSON_TYPE_OBJECT);
+            return NOTFOUND(describe,header);
     }
 
     @ApiOperation(value="根据条件获取单个居民", notes="" ,response = FeedbackJson.class)
@@ -54,9 +54,9 @@ public class BscresidentController extends BaseController<Bscresident>{
         if (!header.isValid()) return FORBIDDEN(header);
         Bscresident p = bscresidentService.findOne(person);
         if (null != p)
-            return OK(describe,p,header,GlobalConstance.JSON_TYPE_OBJECT);
+            return OK(describe,p,header);
         else
-            return NOTFOUND(describe,header,GlobalConstance.JSON_TYPE_OBJECT);
+            return NOTFOUND(describe,header);
     }
 
     @ApiOperation(value="根据name查询居民(模糊匹配)", notes="",response = FeedbackJson.class)
@@ -65,7 +65,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         Bscresident person = bscresidentService.findByNameLike(name);
-        return OK(describe,person,header,GlobalConstance.JSON_TYPE_OBJECT);
+        return OK(describe,person,header);
     }
 
     @ApiOperation(value="查询居民总条数", notes="",response = FeedbackJson.class)
@@ -73,11 +73,7 @@ public class BscresidentController extends BaseController<Bscresident>{
     public FeedbackJson countAll(@ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
-        int total = bscresidentService.count();
-        if (total > 0)
-            return OK(describe,header,GlobalConstance.JSON_TYPE_INTEGER,total);
-        else
-            return NOTFOUND(describe,header,GlobalConstance.JSON_TYPE_INTEGER);
+        return OK(describe,header, bscresidentService.count());
     }
 
     @ApiOperation(value="根据条件查询居民个数", notes="",response = FeedbackJson.class)
@@ -86,17 +82,30 @@ public class BscresidentController extends BaseController<Bscresident>{
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         int total = bscresidentService.count(bscresident);
-        return OK(describe,header,GlobalConstance.JSON_TYPE_INTEGER,total);
+        return OK(describe,header,total);
     }
 
     @ApiOperation(value="根据PAGE查询多个居民", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/query/{page}/{size}", method=RequestMethod.GET)
-    public FeedbackJson queryListByObject(@PathVariable("page") int page, @PathVariable("size") int size,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
+    public FeedbackJson queryListByObject(@PathVariable( "page") int page, @PathVariable("size") int size,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         Pageable pageable = new PageRequest(page,size, Sort.Direction.DESC,"id");
         Page<Bscresident> persons = bscresidentService.findListByObject(new Bscresident(),pageable);
-        return OK(describe,persons,header,GlobalConstance.JSON_TYPE_LIST_OBJECT,persons.getSize());
+        return OK(describe,persons,header,persons.getSize());
+    }
+
+    @ApiOperation(value="根据PAGE查询多个居民", notes="",response = FeedbackJson.class)
+    @RequestMapping(value="/query/sort", method=RequestMethod.GET)
+    public FeedbackJson queryListByObject_(@RequestParam(value = "page", required = true, defaultValue = "10") Integer page,
+                                           @RequestParam(value = "limit", required = true, defaultValue = "12") Integer limit
+                                           ,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        System.out.println("page,limit="+page+" "+limit);
+        Pageable pageable = new PageRequest(page,limit, Sort.Direction.DESC,"id");
+        Page<Bscresident> persons = bscresidentService.findListByObject(new Bscresident(),pageable);
+        return OK(describe,persons,header,persons.getSize());
     }
 
     @ApiOperation(value="根据id查找居民是否存在", notes="",response = FeedbackJson.class)
@@ -105,7 +114,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         boolean flg = bscresidentService.exist(id);
-        return OK(describe,header,GlobalConstance.JSON_TYPE_BOOLEAN,flg);
+        return OK(describe,header,flg);
     }
 
     @ApiOperation(value="根据条件查询居民是否存在", notes="",response = FeedbackJson.class)
@@ -114,7 +123,7 @@ public class BscresidentController extends BaseController<Bscresident>{
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         boolean flg = bscresidentService.exist(bscresident);
-        return OK(describe,header,GlobalConstance.JSON_TYPE_BOOLEAN,flg);
+        return OK(describe,header,flg);
     }
 
     @ApiOperation(value="根据条件查询居民", notes="",response = FeedbackJson.class)
@@ -129,36 +138,38 @@ public class BscresidentController extends BaseController<Bscresident>{
             System.out.println("code="+code+" tel="+tel);
             person = bscresidentService.complexFind(code,tel);
         }
-        return OK(describe,person,header,GlobalConstance.JSON_TYPE_BOOLEAN);
+        return OK(describe,person,header);
     }
-/*
-    @ApiOperation(value="保存单个居民", notes="",response = ResultJson.class)
+
+    @ApiOperation(value="保存单个居民", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/save/one", method=RequestMethod.POST)
-    public ResultJson saveObject(Bscresident bscresident, HttpServletRequest req) {
-        return super.saveObject(bscresident, req);
+    public FeedbackJson saveObject(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        Bscresident person = bscresidentService.save(bscresident);
+        if (Q.notNull(person)){
+            return OK(describe,person,header);
+        }
+        return NOTFOUND(describe,header);
     }
 
-    @ApiOperation(value="根据条件查询多个居民", notes="",response = ResultJson.class)
-    @RequestMapping(value="/save/list", method=RequestMethod.POST)
-    public ResultJson saveListObject(List<Bscresident> bscresidents, HttpServletRequest req) {
-        return super.saveListObject(bscresidents, req);
-    }
 
-    @ApiOperation(value="根据id删除单个居民", notes="",response = ResultJson.class)
+    @ApiOperation(value="根据id删除单个居民", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
-    public ResultJson deleteObject(@PathVariable("id") int id, HttpServletRequest req) {
-        return super.deleteObject(id, req);
+    public FeedbackJson deleteObject(@PathVariable("id") int id, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        bscresidentService.deleteOne(id);
+        return OK(describe,null,true);
     }
 
-    @ApiOperation(value="根据条件删除单个居民", notes="",response = ResultJson.class)
+    @ApiOperation(value="根据条件删除单个居民", notes="",response = FeedbackJson.class)
     @RequestMapping(value="/delete/one", method=RequestMethod.DELETE)
-    public ResultJson deleteObject(Bscresident bscresident, HttpServletRequest req) {
-        return super.deleteObject(bscresident, req);
+    public FeedbackJson deleteObject(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        bscresidentService.deleteOne(bscresident);
+        return OK(describe,null,true);
     }
 
-    @ApiOperation(value="根据条件删除多个居民", notes="",response = ResultJson.class)
-    @RequestMapping(value="/delete/list", method=RequestMethod.DELETE)
-    public ResultJson deleteListByObject(Bscresident bscresident, HttpServletRequest req) {
-        return super.deleteListByObject(bscresident, req);
-    }*/
 }

@@ -1,12 +1,13 @@
 package com.smip.entity.account;
 
 import com.smip.entity.QueryEntity;
+import io.swagger.annotations.ApiModel;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-
+@ApiModel(value="居民对象",description="居民")
 @Entity
 public class Bscresident extends QueryEntity implements Serializable{
     @Id

@@ -1,5 +1,7 @@
 package com.smip.entity.sys;
 
+import io.swagger.annotations.ApiModel;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -7,6 +9,7 @@ import java.io.Serializable;
 /**
  * Created by kepler@gmail.com on 2017/11/9.
  */
+@ApiModel(value="操作员对象",description="操作员")
 @Entity
 public class Secuser implements Serializable {
     @Id
