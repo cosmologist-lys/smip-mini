@@ -28,6 +28,7 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
         this.bscresidentMapper = bscresidentMapper;
     }*/
 
+
     @Override
     @Cacheable(value = "person")
     public Bscresident findOne(Integer id) {
@@ -76,11 +77,6 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     @Override
     @Cacheable(value = "personCount")
     public int count(Bscresident bscresident) {
-        /*if (bscresident.isFuzzyMatch(bscresident))
-            return super.count(bscresident);
-        else {
-
-        }*/
         return super.count(bscresident);
     }
 
