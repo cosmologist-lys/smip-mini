@@ -12,7 +12,7 @@ public interface BscresidentRepository extends BaseRepository<Bscresident>{
     //nativceQuery = true 开启sql查询。false 开启hql查询
 
     /*
-    json对象查询
+    json对象查询 mongodb可用
     @Query("{'owner.$id': ?#{[0]}, 'enabled': ?#{[1]}, 'archived': ?#{[2]}}")
     Set<Project> findRelated(User user, boolean enabled, boolean archived)*/
 
