@@ -1,5 +1,7 @@
 package com.smip.handlers;
 
+import com.smip.service.account.BscresidentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +17,7 @@ public class ScheduleTasks {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     // @Scheduled(cron = "0 0 2 * * ?") 可配置详细触发时间。
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 60000)
     public void reportCurrentTime() {
         System.out.println("当前时间：" + dateFormat.format(new Date()));
     }

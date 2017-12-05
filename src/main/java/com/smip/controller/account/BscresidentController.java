@@ -95,11 +95,12 @@ public class BscresidentController extends BaseController<Bscresident>{
         return OK(describe,persons,header,persons.getSize());
     }
 
+    // /resident/query/sort?page=2&&limit=1
     @ApiOperation(value="根据PAGE查询多个居民",response = FeedbackJson.class)
     @RequestMapping(value="/query/sort", method=RequestMethod.GET)
-    public FeedbackJson queryListByObject_(@RequestParam(value = "page", required = true, defaultValue = "10") Integer page,
-                                           @RequestParam(value = "limit", required = true, defaultValue = "12") Integer limit
-                                           ,@ModelAttribute("tokenModel") ReqHeadersMsg header) {
+    public FeedbackJson queryListByObject_(@RequestParam(value = "page", required = true, defaultValue = "1") Integer page,
+                                           @RequestParam(value = "limit", required = true, defaultValue = "12") Integer limit,
+                                           @ModelAttribute("tokenModel") ReqHeadersMsg header) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
         System.out.println("page,limit="+page+" "+limit);

@@ -40,19 +40,35 @@ public class Casino {
        return false;
    }
 
+   public static void testGamble(){
+       int[] ti = new int[]{3,5,9};
+       int p = 100000;
+       int total = 0;
+       for (int i=0;i<p;i++){
+           total = total + gamble(ti,3);
+       }
+       if (total>0){
+           NumberFormat nt = NumberFormat.getPercentInstance();
+           nt.setMinimumFractionDigits(4);
+           float rate = (float)p/total;
+           System.out.println("rate="+nt.format(rate));
+       }
+   }
+
     public static void main(String[] args) {
-        int[] ti = new int[]{3,5,9};
-        int p = 100000;
-        int total = 0;
-        for (int i=0;i<p;i++){
-            total = total + gamble(ti,3);
+        testGamble();
+        System.out.println(getRate(8));
+    }
+
+    public static double getRate(int level){
+        if (level>0 && level<10){
+            int ge = new Random().nextInt(10),
+                    xiao1 = new Random().nextInt(10),
+                    xiao2 = new Random().nextInt(10),
+                    xiao3 = new Random().nextInt(10);
+            return ge+xiao1*.1+xiao2*.01+xiao3*.001;
         }
-        if (total>0){
-            NumberFormat nt = NumberFormat.getPercentInstance();
-            nt.setMinimumFractionDigits(4);
-            float rate = (float)p/total;
-            System.out.println("rate="+nt.format(rate));
-        }
+        return 0;
     }
 
 

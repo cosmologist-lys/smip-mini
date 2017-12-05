@@ -23,4 +23,5 @@ public interface BscresidentRepository extends BaseRepository<Bscresident>{
 
     @Query(value = "SELECT b FROM Bscresident b where b.code= :code and b.tel=:tel")
     Bscresident complexFind(@Param("code") String code,@Param("tel") String tel);
+
 }

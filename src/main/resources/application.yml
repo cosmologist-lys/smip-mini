@@ -1,4 +1,6 @@
-
+spring:
+  profiles:
+    active: dev
 server:
   port: 3100
   session:
@@ -6,31 +8,6 @@ server:
   tomcat:
     uri-encoding: utf-8
   max-http-header-size: 16384
-spring:
-  mvc:
-    throw-exception-if-no-handler-found: true
-  resources:
-    add-mappings: false
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
-    username: smip
-    password: qwkrom
-  jpa:
-    hibernate:
-      ddl-auto: none
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    database: oracle
-    database-platform: ORACLE
-    properties:
-      hibernate:
-        dialect : org.hibernate.dialect.Oracle10gDialect
-    show-sql: true
-  cache:
-    cache-names: guavacache
-    type: guava
-
 debug: false
 mybatis:
   type-aliases-package: com.smip.entity
