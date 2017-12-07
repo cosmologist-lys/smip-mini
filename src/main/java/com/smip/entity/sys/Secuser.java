@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 /**
  * Created by kepler@gmail.com on 2017/11/9.
@@ -50,6 +51,10 @@ public class Secuser implements Serializable {
                 ", shortcut='" + shortcut + '\'' +
                 ", token='" + token + '\'' +
                 '}';
+    }
+
+    public static Secuser create(final Supplier<Secuser> supplier){
+        return supplier.get();
     }
 
     public String getToken() {

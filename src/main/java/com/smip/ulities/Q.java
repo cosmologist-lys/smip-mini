@@ -118,10 +118,10 @@ public class Q {
     }
 
     /**
-     * 判断是否为中文
+     * 判断是否为字母
      * @param str
      */
-    public static boolean isChinese(String str) {
+    public static boolean isCharacter(String str) {
         byte[] buf = str.getBytes();
         for (byte b : buf) {
             if (b < 0) {
