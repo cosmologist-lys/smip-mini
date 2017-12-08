@@ -22,3 +22,11 @@ use the jpa-repisitory,simplified the repository procedure.
 no frame used.To post or get headers with username and password,the smip-mini 
 valid it for permission.with OK, NOT_FOUND,FORBIDDEN call back
 json.
+
+####DataSource
+more than 1 datasource supported.use factory to build model.
+
+####Schedule Tasks
+made scheduleed tasks with tag @Schedule witch spring-boot frame supports.
+with value corn can make properties in details.This part will depreat when 
+some set-up functions.

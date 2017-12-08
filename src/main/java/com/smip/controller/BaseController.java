@@ -35,21 +35,13 @@ public class BaseController<T>{
         String username = request.getHeader("username"),
                 psw = request.getHeader("psw"),
                 alg = request.getHeader("alg");
-        boolean valid = true;
+        //boolean valid = true;
         if (Q.notNull(alg)){
             //// TODO: 2017/11/28
         }
-        ReqHeadersMsg header = new ReqHeadersMsg(false);
-        if (Q.notNull(username,psw) && valid){
-            String encryptedPsw = Q_Cipher.md5(psw);
-            Secuser secuser = secuserService.findByName(username);
-            if (null != secuser){
-                if (secuser.getPassWord().equals(encryptedPsw)){
-                    header = new ReqHeadersMsg(username,true,psw,encryptedPsw,request.getRequestURI());
-                }
-            }
-        }
-        return header;
+        return (secuserService.validUser(username,psw))?
+                    new ReqHeadersMsg(username,true,psw,null,request.getRequestURI())
+                    :new ReqHeadersMsg(false);
     }
 
     /**
