@@ -30,3 +30,7 @@ more than 1 datasource supported.use factory to build model.
 made scheduleed tasks with tag @Schedule witch spring-boot frame supports.
 with value corn can make properties in details.This part will depreat when 
 some set-up functions.
+
+####JAVA 8
+new specific of java 8 supported.use Stream and lambda instead of complex
+query.
