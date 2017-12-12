@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 /**
@@ -31,7 +33,7 @@ public class BaseController<T>{
 
     @ModelAttribute("tokenModel")
     public ReqHeadersMsg beforeController(HttpServletRequest request){
-        logger.info("tokenModel");
+        logger.info("token valid {baseController.beforeController}");
         String username = request.getHeader("username"),
                 psw = request.getHeader("psw"),
                 alg = request.getHeader("alg");
@@ -98,6 +100,6 @@ public class BaseController<T>{
 
     public ReqInfoMsg getInfoMsg(String describe,ReqHeadersMsg header,String type){
         header.setPsw(null);
-        return new ReqInfoMsg(describe,new Date(),type,header);
+        return new ReqInfoMsg(describe, LocalDate.now().toString()+ " "+LocalTime.now().toString(),type,header);
     }
 }

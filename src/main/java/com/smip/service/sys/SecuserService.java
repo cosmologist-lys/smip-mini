@@ -8,6 +8,7 @@ import com.smip.ulities.SysConst;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface SecuserService extends BaseService<Secuser> {
@@ -17,7 +18,6 @@ public interface SecuserService extends BaseService<Secuser> {
     @Cacheable(value = "user_valid")
     default boolean validUser(String username,String psw){
         String encryptedPsw = Q_Cipher.md5(psw);
-        System.out.println("validuser");
         if (Q.notNull(SysConst.SYS_SECUSER_LIST)){
             return
                 Q.notNull(SysConst.SYS_SECUSER_LIST.stream()

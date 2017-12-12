@@ -1,6 +1,5 @@
 package com.smip.entity.json;
 
-import java.util.Date;
 
 /**
  * 请求验证msg,feedbackjson子类
@@ -11,11 +10,11 @@ public class ReqInfoMsg {
     private String tokenPsw;//密码
     private String requri;//请求地址
     private String describe;
-    private Date reqtime;//请求时间
+    private String reqtime;//请求时间
     private String type;
 
 
-    public ReqInfoMsg(String describe, Date reqtime, String type,ReqHeadersMsg header) {
+    public ReqInfoMsg(String describe, String reqtime, String type,ReqHeadersMsg header) {
         this.describe = describe;
         this.reqtime = reqtime;
         this.type = type;
@@ -24,7 +23,7 @@ public class ReqInfoMsg {
         this.requri = header.getUri();
     }
 
-    public ReqInfoMsg(String tokenUsername, String tokenPsw, String requri, String describe, Date reqtime, String type) {
+    public ReqInfoMsg(String tokenUsername, String tokenPsw, String requri, String describe, String reqtime, String type) {
         this.tokenUsername = tokenUsername;
         this.tokenPsw = tokenPsw;
         this.requri = requri;
@@ -68,11 +67,11 @@ public class ReqInfoMsg {
         this.describe = describe;
     }
 
-    public Date getReqtime() {
+    public String getReqtime() {
         return reqtime;
     }
 
-    public void setReqtime(Date reqtime) {
+    public void setReqtime(String reqtime) {
         this.reqtime = reqtime;
     }
 
