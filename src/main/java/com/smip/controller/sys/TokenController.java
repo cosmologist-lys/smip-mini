@@ -1,13 +1,20 @@
 package com.smip.controller.sys;
 
 import com.smip.controller.BaseController;
+import com.smip.entity.json.FeedbackJson;
 import com.smip.entity.json.ReqHeadersMsg;
 import com.smip.entity.sys.Secuser;
 import com.smip.service.sys.SecuserService;
+import com.smip.ulities.Q_Cipher;
+import com.smip.ulities.Q_Cpnt;
+import com.smip.ulities.SysConst;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 public class TokenController extends BaseController<Secuser> {
     @Autowired
     private SecuserService secuserService;
+    private String describe;
 
     @Override
     public ReqHeadersMsg beforeController(HttpServletRequest request) {
@@ -45,4 +53,18 @@ public class TokenController extends BaseController<Secuser> {
         }
         return new ResultJson(true,HttpStatus.OK,GlobalConstance.RESULTJSON_TYPE_BOOLEAN,describe);
     }*/
+    @ApiOperation(value="登陆并获取token", notes="",response = FeedbackJson.class)
+    @RequestMapping(value="/login", method= RequestMethod.GET)
+    public FeedbackJson findOne(@ModelAttribute("tokenModel") ReqHeadersMsg header){
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!header.isValid()) return FORBIDDEN(header);
+        String encryptedPsw = Q_Cipher.md5(header.getPsw());
+        Secuser secuser = SysConst.SYS_SECUSER_LIST.stream()
+                .filter((user)->user.getPassWord()
+                        .equals(header.getPsw().length()>20?header.getPsw():encryptedPsw))
+                .filter((user)->user.getUserName().toLowerCase()
+                        .equals(header.getUsername().toLowerCase()))
+                .findFirst().get();
+        return OK(describe,secuser,header);
+    }
 }

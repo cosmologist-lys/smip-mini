@@ -17,13 +17,15 @@ public interface SecuserService extends BaseService<Secuser> {
 
     @Cacheable(value = "user_valid")
     default boolean validUser(String username,String psw){
+        System.err.println(psw);
         String encryptedPsw = Q_Cipher.md5(psw);
         if (Q.notNull(SysConst.SYS_SECUSER_LIST)){
-            return
-                Q.notNull(SysConst.SYS_SECUSER_LIST.stream()
-                        .filter((user)->user.getPassWord().equals(encryptedPsw))
-                        .filter((user)->user.getUserName().toLowerCase().equals(username.toLowerCase()))
-                        .findFirst().get());
+            return (SysConst.SYS_SECUSER_LIST.stream()
+                        .filter((user)->user.getPassWord()
+                                .equals(psw.length()>20?psw:encryptedPsw))
+                        .filter((user)->user.getUserName().toLowerCase()
+                                .equals(username.toLowerCase()))
+                        .count()>0);
             }
         return false;
         }

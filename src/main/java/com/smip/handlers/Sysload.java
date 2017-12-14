@@ -1,7 +1,8 @@
 package com.smip.handlers;
 import com.smip.service.sys.SecuserService;
 import com.smip.ulities.SysConst;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -15,12 +16,34 @@ import org.springframework.stereotype.Component;
 @Order(value = 0)
 public class Sysload implements CommandLineRunner {
 
-    @Autowired
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     private SecuserService secuserService;
 
-    @Override
-    public void run(String... strings) throws Exception {
-        secuserService.findAll().forEach(u->SysConst.SYS_SECUSERS_MAP.put(u.getUserName(),u));
-        SysConst.SYS_SECUSER_LIST = secuserService.findAll();
+    public Sysload(SecuserService service){
+        this.secuserService = service;
     }
+
+    @Override
+    public void run(String... argsss) throws Exception {
+        load(this);
+    }
+
+    public static void load(Sysload sys){
+        long starttime = System.currentTimeMillis();
+        sys.logger.info("static list/map load on system startup");
+        sys.secuserService.findAll().forEach(u->SysConst.SYS_SECUSERS_MAP.put(u.getUserName(),u));
+        SysConst.SYS_SECUSER_LIST = sys.secuserService.findAll();
+        sys.logger.info("static list/map loaded successfully,time waste:"+(System.currentTimeMillis()-starttime)+" millis");
+    }
+    /*public static void main(String[] args) {
+        Secuser u = null;
+        String psw = Optional.ofNullable(u)
+                .map(Secuser::getPassWord)
+                .orElse("no");
+        LocalDate day1 = LocalDate.of(2017,12,1);
+        LocalDate day2 = LocalDate.of(2012,11,23);
+        System.out.println(Duration.between(day1,day2));
+
+    }*/
 }

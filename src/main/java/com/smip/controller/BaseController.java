@@ -51,7 +51,7 @@ public class BaseController<T>{
      * @return
      */
     public FeedbackJson<T> OK(String describe,T t,ReqHeadersMsg header){
-        ReqInfoMsg infoMsg = getInfoMsg(describe,header, t.getClass().getSimpleName());
+        ReqInfoMsg infoMsg = getInfoMsg(describe,header, null == t?"": t.getClass().getSimpleName());
         if (null != t){
             return new FeedbackJson(infoMsg,t, HttpStatus.OK,null);
         }else{
