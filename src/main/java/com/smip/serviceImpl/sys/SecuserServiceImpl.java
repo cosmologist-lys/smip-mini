@@ -20,9 +20,9 @@ public class SecuserServiceImpl extends BaseServiceImpl<Secuser> implements Secu
     private SecuserRepository secuserRepository;
 
     @Override
-    @Cacheable(value = "secuser",key = "#username")
+    @Cacheable(value = "secuser", key = "#username")
     public Secuser findByName(String username) {
-        if (Q.notNull(SysConst.SYS_SECUSERS_MAP)){
+        if (Q.notNull(SysConst.SYS_SECUSERS_MAP)) {
             return SysConst.SYS_SECUSERS_MAP.get(username);
         }
         return secuserRepository.findOne(Example.of(new Secuser().setUserName(username)));
@@ -33,4 +33,5 @@ public class SecuserServiceImpl extends BaseServiceImpl<Secuser> implements Secu
     public List<Secuser> findAll() {
         return super.findAll();
     }
+
 }

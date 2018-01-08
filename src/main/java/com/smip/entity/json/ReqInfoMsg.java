@@ -19,7 +19,7 @@ public class ReqInfoMsg {
         this.reqtime = reqtime;
         this.type = type;
         this.tokenUsername = header.getUsername();
-        this.tokenPsw = header.getPsw();
+        this.tokenPsw = header.get_token();
         this.requri = header.getUri();
     }
 

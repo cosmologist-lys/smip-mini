@@ -58,10 +58,7 @@ public class TokenController extends BaseController<Secuser> {
     public FeedbackJson findOne(@ModelAttribute("tokenModel") ReqHeadersMsg header){
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!header.isValid()) return FORBIDDEN(header);
-        String encryptedPsw = Q_Cipher.md5(header.getPsw());
         Secuser secuser = SysConst.SYS_SECUSER_LIST.stream()
-                .filter((user)->user.getPassWord()
-                        .equals(header.getPsw().length()>20?header.getPsw():encryptedPsw))
                 .filter((user)->user.getUserName().toLowerCase()
                         .equals(header.getUsername().toLowerCase()))
                 .findFirst().get();

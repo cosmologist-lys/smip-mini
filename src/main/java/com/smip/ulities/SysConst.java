@@ -14,4 +14,6 @@ import java.util.Map;
 public class SysConst {
     public static Map<String, Secuser> SYS_SECUSERS_MAP = new LinkedHashMap<>();
     public static List<Secuser> SYS_SECUSER_LIST = new ArrayList<>();
+
+    public static Map<String, Secuser> SYS_SECUSER_TOKEN = new LinkedHashMap<>();
 }

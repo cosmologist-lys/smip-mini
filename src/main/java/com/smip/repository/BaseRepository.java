@@ -9,4 +9,5 @@ import java.util.List;
 @NoRepositoryBean
 public interface BaseRepository<T> extends PagingAndSortingRepository<T,Integer>,JpaRepository<T,Integer> {
 
+
 }

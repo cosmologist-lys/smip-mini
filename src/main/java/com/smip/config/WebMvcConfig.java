@@ -1,6 +1,7 @@
 package com.smip.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -9,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 class WebMvcConfig extends WebMvcConfigurerAdapter {
     /**
      * 配置加载swagger-ui.html
-     * @param registry
+     * @param ResourceHandlerRegistry
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -18,6 +19,18 @@ class WebMvcConfig extends WebMvcConfigurerAdapter {
 
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
+    /**
+     * 配置跨域请求
+     * @param CorsRegistry
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("GET", "POST")
+                .allowCredentials(false).maxAge(5000);
     }
 
 

@@ -22,9 +22,8 @@ import java.util.List;
 public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> implements BscresidentService {
     @Autowired
     private BscresidentRepository bscresidentRepository;
-    //private BscresidentMapper bscresidentMapper;
-
-    /*public BscresidentServiceImpl(BscresidentMapper bscresidentMapper) {
+    /*private BscresidentMapper bscresidentMapper;
+    public BscresidentServiceImpl(BscresidentMapper bscresidentMapper) {
         this.bscresidentMapper = bscresidentMapper;
     }*/
 

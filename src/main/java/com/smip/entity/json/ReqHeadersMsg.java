@@ -8,15 +8,15 @@ package com.smip.entity.json;
 public class ReqHeadersMsg {
     private String username;
     private boolean valid;
-    private String psw;
+    private String _token;
     private String enPsw;
     private String uri;
 
 
-    public ReqHeadersMsg(String username, boolean valid, String psw, String enPsw, String uri) {
+    public ReqHeadersMsg(String username, boolean valid, String token, String enPsw, String uri) {
         this.username = username;
         this.valid = valid;
-        this.psw = psw;
+        this._token = token;
         this.enPsw = enPsw;
         this.uri = uri;
     }
@@ -45,7 +45,7 @@ public class ReqHeadersMsg {
         return "ReqHeadersMsg{" +
                 "username='" + username + '\'' +
                 ", valid=" + valid +
-                ", psw='" + psw + '\'' +
+                ", psw='" + _token + '\'' +
                 ", enPsw='" + enPsw + '\'' +
                 '}';
     }
@@ -66,12 +66,12 @@ public class ReqHeadersMsg {
         this.valid = valid;
     }
 
-    public String getPsw() {
-        return psw;
+    public String get_token() {
+        return _token;
     }
 
-    public void setPsw(String psw) {
-        this.psw = psw;
+    public void set_token(String _token) {
+        this._token = _token;
     }
 
     public String getEnPsw() {
