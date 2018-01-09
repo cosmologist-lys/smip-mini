@@ -38,6 +38,7 @@ public class BaseController<T> {
         if (!Q.notNull(request_token) ) {
             username = request.getHeader("username");
             psw = request.getHeader("psw");
+            System.out.println(username+psw);
             callback_token = secuserService.validUser(username, psw);
             if (!Q.notNull(callback_token)) {
                 return new ReqHeadersMsg(false);
@@ -47,6 +48,7 @@ public class BaseController<T> {
         }
         //非第一次请求，验证token
         else {
+            System.out.println("null");
             if (secuserService.validToken(request_token)) {
                 callback_token = request_token;
                 return new ReqHeadersMsg(username, true, callback_token, null, request.getRequestURI());
@@ -54,14 +56,6 @@ public class BaseController<T> {
                 return new ReqHeadersMsg(false);
             }
         }
-
-        /*boolean valid = false;
-        if (Q.notNull(alg)
-                && alg.toString().toLowerCase()
-                .equals(Q_Cipher.md5("md5").toLowerCase())){
-            valid = true;
-        }*/
-
     }
 
     /**

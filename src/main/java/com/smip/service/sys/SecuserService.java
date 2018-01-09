@@ -25,7 +25,7 @@ public interface SecuserService extends BaseService<Secuser> {
      * @param psw
      * @return token
      */
-    @Cacheable(value = "user_valid")
+    @Cacheable(value = "user_valid", key = "#username")
     default String validUser(String username, String psw) {
         System.err.println(username + "===" + psw);
         String encryptedPsw = Q_Cipher.md5(psw);
@@ -35,18 +35,11 @@ public interface SecuserService extends BaseService<Secuser> {
                     .filter((user) -> user.getPassWord().equals(encryptedPsw))
                     .filter((user) -> user.getUserName().toLowerCase().equals(username.toLowerCase()))
                     .findFirst();
-            if (Q.notNull(secuser) && secuser.toString().length() > 0) {
+            if (secuser.isPresent()) {
                 Secuser _secuser = secuser.get();
                 token = UUID.randomUUID().toString();
                 SysConst.SYS_SECUSER_TOKEN.put(token, _secuser);
             }
-
-           /* token = (SysConst.SYS_SECUSER_LIST.stream()
-                    .filter((user) -> user.getPassWord()
-                            .equals(encryptedPsw))
-                    .filter((user) -> user.getUserName().toLowerCase()
-                            .equals(username.toLowerCase()))
-                    .count() > 0) ? UUID.randomUUID().toString() : null;*/
         }
         return token;
     }

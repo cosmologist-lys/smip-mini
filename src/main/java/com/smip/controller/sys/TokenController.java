@@ -62,6 +62,7 @@ public class TokenController extends BaseController<Secuser> {
                 .filter((user)->user.getUserName().toLowerCase()
                         .equals(header.getUsername().toLowerCase()))
                 .findFirst().get();
+        secuser.setPassWord("");//返回的JSON清空密码防止入侵
         return OK(describe,secuser,header);
     }
 }
