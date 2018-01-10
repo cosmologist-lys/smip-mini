@@ -37,7 +37,7 @@ public interface SecuserService extends BaseService<Secuser> {
                     .findFirst();
             if (secuser.isPresent()) {
                 Secuser _secuser = secuser.get();
-                token = UUID.randomUUID().toString();
+                token = UUID.randomUUID().toString().replace("-","");
                 SysConst.SYS_SECUSER_TOKEN.put(token, _secuser);
             }
         }

@@ -40,6 +40,7 @@ public class BaseController<T> {
             psw = request.getHeader("psw");
             System.out.println(username+psw);
             callback_token = secuserService.validUser(username, psw);
+            System.out.println("token="+callback_token);
             if (!Q.notNull(callback_token)) {
                 return new ReqHeadersMsg(false);
             } else {
