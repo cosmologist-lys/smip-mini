@@ -25,7 +25,7 @@ public interface SecuserService extends BaseService<Secuser> {
      * @param psw
      * @return token
      */
-    @Cacheable(value = "user_valid", key = "#username")
+    @Cacheable(value = "user_valid", key = "#username+#psw")
     default String validUser(String username, String psw) {
         System.err.println(username + "===" + psw);
         String encryptedPsw = Q_Cipher.md5(psw);
