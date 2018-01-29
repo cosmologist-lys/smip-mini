@@ -36,14 +36,4 @@ public class Sysload implements CommandLineRunner {
         SysConst.SYS_SECUSER_LIST = sys.secuserService.findAll();
         sys.logger.info("static list/map loaded successfully,time waste:"+(System.currentTimeMillis()-starttime)+" millis");
     }
-    /*public static void main(String[] args) {
-        Secuser u = null;
-        String psw = Optional.ofNullable(u)
-                .map(Secuser::getPassWord)
-                .orElse("no");
-        LocalDate day1 = LocalDate.of(2017,12,1);
-        LocalDate day2 = LocalDate.of(2012,11,23);
-        System.out.println(Duration.between(day1,day2));
-
-    }*/
 }

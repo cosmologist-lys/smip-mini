@@ -1,11 +1,9 @@
 package com.smip.controller.sys;
 
 import com.smip.controller.BaseController;
-import com.smip.entity.json.FeedbackJson;
-import com.smip.entity.json.ReqHeadersMsg;
+import com.smip.entity.json.ConJson;
 import com.smip.entity.sys.Secuser;
 import com.smip.service.sys.SecuserService;
-import com.smip.ulities.Q_Cipher;
 import com.smip.ulities.Q_Cpnt;
 import com.smip.ulities.SysConst;
 import io.swagger.annotations.Api;
@@ -23,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * tokenController = secuserController
  */
-@Api(value = "/users",description = "用户登陆",produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "/users", description = "用户登陆", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 @RequestMapping(value = "/users")
 public class TokenController extends BaseController<Secuser> {
@@ -32,37 +30,30 @@ public class TokenController extends BaseController<Secuser> {
     private String describe;
 
     @Override
-    public ReqHeadersMsg beforeController(HttpServletRequest request) {
+    public ConJson beforeController(HttpServletRequest request) {
         return super.beforeController(request);
     }
 
-    /* @ApiOperation(value="登陆并获取token", notes="",response = ResultJson.class)
-    @RequestMapping(value="/login", method= RequestMethod.POST)
-    public ResultJson login(@RequestBody Secuser secuser, HttpServletRequest req){
-        Assert.notNull(secuser,"secuser cannot be null");
-        System.out.println("secuser="+secuser.toString());
-        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        String password = (null != secuser && null != secuser.getPassWord())?
-                Q_Cipher.md5(secuser.getPassWord()):"";
-        secuser.setPassWord(password);
-        Secuser user = secuserService.findOne(secuser.getId());
-        System.out.println("user="+user.toString());
-
-        if (user == null ){
-            return new ResultJson(req);
-        }
-        return new ResultJson(true,HttpStatus.OK,GlobalConstance.RESULTJSON_TYPE_BOOLEAN,describe);
-    }*/
-    @ApiOperation(value="登陆并获取token", notes="",response = FeedbackJson.class)
-    @RequestMapping(value="/login", method= RequestMethod.GET)
-    public FeedbackJson findOne(@ModelAttribute("tokenModel") ReqHeadersMsg header){
+    @ApiOperation(value = "登陆并获取token", notes = "", response = ConJson.class)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ConJson findOne(@ModelAttribute("tokenModel") ConJson conJson) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!header.isValid()) return FORBIDDEN(header);
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
         Secuser secuser = SysConst.SYS_SECUSER_LIST.stream()
-                .filter((user)->user.getUserName().toLowerCase()
-                        .equals(header.getUsername().toLowerCase()))
-                .findFirst().get();
+                .filter((user) -> user.getUserName().toLowerCase()
+                        .equals(conJson.getKeycore().get_tkn().toLowerCase()))
+                        .findFirst().get();
         secuser.setPassWord("");//返回的JSON清空密码防止入侵
-        return OK(describe,secuser,header);
+        return OK(describe,secuser,conJson);
     }
+    @ApiOperation(value = "登出并清空token", notes = "", response = ConJson.class)
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public ConJson logout(@ModelAttribute("tokenModel") ConJson conJson){
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        String token = conJson.getKeycore().get_token();
+        secuserService.clearToken(token);
+        return OK(describe,true,conJson);
+    }
+
 }

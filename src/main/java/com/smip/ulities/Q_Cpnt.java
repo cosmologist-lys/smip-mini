@@ -9,10 +9,6 @@ public class Q_Cpnt {
      * @return
      */
     public static String getMethodName(){
-//        StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
-//        StackTraceElement e = stacktrace[2];
-//        String methodName = e.getMethodName();
-//        return methodName;
         return Thread.currentThread().getStackTrace()[2].getMethodName();
     }
 

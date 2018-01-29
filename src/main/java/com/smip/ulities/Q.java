@@ -32,7 +32,7 @@ public class Q {
         SimpleDateFormat sdf = null;
         switch (fmt){
             case YMDHMS:
-                sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 break;
             case HMS:
                 sdf = new SimpleDateFormat("hh:mm:ss");
@@ -45,6 +45,9 @@ public class Q {
                 break;
             case MD:
                 sdf = new SimpleDateFormat("MM-dd");
+                break;
+            case CUST:
+                sdf = new SimpleDateFormat("yyyyMMdd/HHmmssSSSSSS");
                 break;
         }
         return sdf.format(dNow);
@@ -142,5 +145,26 @@ public class Q {
             }
         }
         return true;
+    }
+
+    /**
+     * 获取修改后的object.classname
+     */
+    public static String getClassname(Object object){
+        /*if (object instanceof Integer)
+            return "int";
+        if (object instanceof Boolean)
+            return "bool";
+        if (object instanceof Double)
+            return "double";
+        if (object instanceof Float)
+            return "float";*/
+        if (notNull(object)){
+            String name = object.getClass().getName().toString();
+            if (name.contains("smip."))
+                name = name.split("smip.")[1];
+            return name;
+        }
+        return null;
     }
 }

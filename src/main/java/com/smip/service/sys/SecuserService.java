@@ -61,5 +61,16 @@ public interface SecuserService extends BaseService<Secuser> {
         return false;
     }
 
+    /**
+     * vue端退出登陆,清空map
+     * @param token
+     */
+    default void clearToken(String token){
+        Map map = SysConst.SYS_SECUSER_TOKEN;
+        if (Q.notNull(map,token)){
+            map.remove(token);
+        }
+    }
+
 
 }

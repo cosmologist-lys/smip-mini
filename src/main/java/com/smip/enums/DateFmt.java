@@ -8,8 +8,8 @@ public enum DateFmt {
     YMDHMS,
     HMS,
     YM,
+    CUST, //自定义
     MD;
-
     @Override
     public String toString() {
         return super.toString();

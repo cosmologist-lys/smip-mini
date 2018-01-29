@@ -34,3 +34,5 @@ some set-up functions.
 ####JAVA 8
 new specific of java 8 supported.use Stream and lambda instead of complex
 query.
+
+http://localhost:3100/swagger-ui.html#
