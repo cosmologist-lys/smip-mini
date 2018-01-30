@@ -34,8 +34,6 @@ public class Secuser implements Serializable {
     @Column(name="stopflag")
     private String stopFlag;
     private String shortcut;
-    @Transient
-    private String token;
 
     @Override
     public String toString() {
@@ -49,7 +47,6 @@ public class Secuser implements Serializable {
                 ", roles='" + roles + '\'' +
                 ", stopFlag='" + stopFlag + '\'' +
                 ", shortcut='" + shortcut + '\'' +
-                ", token='" + token + '\'' +
                 '}';
     }
 
@@ -57,13 +54,6 @@ public class Secuser implements Serializable {
         return supplier.get();
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public Secuser setToken(String token) {
-        this.token = token;return this;
-    }
 
     public Integer getId() {
         return id;

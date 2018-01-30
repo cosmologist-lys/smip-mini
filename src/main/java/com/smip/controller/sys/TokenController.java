@@ -42,18 +42,19 @@ public class TokenController extends BaseController<Secuser> {
         Secuser secuser = SysConst.SYS_SECUSER_LIST.stream()
                 .filter((user) -> user.getUserName().toLowerCase()
                         .equals(conJson.getKeycore().get_tkn().toLowerCase()))
-                        .findFirst().get();
+                .findFirst().get();
         secuser.setPassWord("");//返回的JSON清空密码防止入侵
-        return OK(describe,secuser,conJson);
+        return OK(describe, secuser, conJson);
     }
+
     @ApiOperation(value = "登出并清空token", notes = "", response = ConJson.class)
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ConJson logout(@ModelAttribute("tokenModel") ConJson conJson){
+    public ConJson logout(@ModelAttribute("tokenModel") ConJson conJson) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
         String token = conJson.getKeycore().get_token();
         secuserService.clearToken(token);
-        return OK(describe,true,conJson);
+        return OK(describe, true, conJson);
     }
 
 }

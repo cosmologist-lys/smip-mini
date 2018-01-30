@@ -1,20 +1,15 @@
 package com.smip.serviceImpl.account;
 
 import com.smip.entity.account.Bscresident;
-import com.smip.entity.sys.Secuser;
-import com.smip.mapper.account.BscresidentMapper;
 import com.smip.repository.account.BscresidentRepository;
 import com.smip.service.account.BscresidentService;
 import com.smip.serviceImpl.BaseServiceImpl;
 import com.smip.ulities.Q;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.*;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.expression.spel.SpelEvaluationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -62,7 +57,7 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
 
     @Override
     public void deleteOne(Bscresident bscresident) {
-        if (Q.notNull(bscresident)){
+        if (Q.notNull(bscresident)) {
             super.deleteOne(bscresident);
         }
     }
@@ -85,7 +80,7 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     }
 
     @Override
-    @Cacheable(value = "pagePerson",key = "#root.args[1]")
+    @Cacheable(value = "pagePerson", key = "#root.args[1]")
     //key=#root.args[index] 当前方法参数组成的数组组成KEY
     public Page<Bscresident> findListByObject(Bscresident bscresident, Pageable pageable) {
         return super.findListByObject(bscresident, pageable);
@@ -112,9 +107,10 @@ public class BscresidentServiceImpl extends BaseServiceImpl<Bscresident> impleme
     public Bscresident findByNameLike(String name) {
         return bscresidentRepository.findByNamelike(name);
     }
+
     @Override
-    public Bscresident complexFind(String code,String tel){
-        return bscresidentRepository.complexFind(code,tel);
+    public Bscresident complexFind(String code, String tel) {
+        return bscresidentRepository.complexFind(code, tel);
     }
 
     /*

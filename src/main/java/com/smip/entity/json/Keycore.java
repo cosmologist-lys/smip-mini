@@ -8,6 +8,7 @@ import java.util.Arrays;
  */
 public class Keycore {
     private String _tkn; //请求用户名
+    private String _unit_code; //单位代码，留用
     private String _token; //token
     private int _auth; //加密类型
     private int _comtick; //请求次数
@@ -15,7 +16,7 @@ public class Keycore {
     private String[] _userlimits; //用户权限
     private double _timecost; //请求耗时
 
-    public Keycore(String _tkn, String _token, int _auth, int _comtick, boolean _isvalid, String[] _userlimits,double timecost) {
+    public Keycore(String _tkn, String _token, int _auth, int _comtick, boolean _isvalid, String[] _userlimits,double timecost,String _unit_code) {
         this._tkn = _tkn;
         this._token = _token;
         this._auth = _auth;
@@ -23,6 +24,7 @@ public class Keycore {
         this._isvalid = _isvalid;
         this._userlimits = _userlimits;
         this._timecost = timecost;
+        this._unit_code = _unit_code;
     }
 
     public Keycore() {
@@ -101,6 +103,15 @@ public class Keycore {
 
     public Keycore set_timecost(double _timecost) {
         this._timecost = _timecost;
+        return this;
+    }
+
+    public String get_unit_code() {
+        return _unit_code;
+    }
+
+    public Keycore set_unit_code(String _unit_code) {
+        this._unit_code = _unit_code;
         return this;
     }
 }

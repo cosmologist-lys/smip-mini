@@ -18,12 +18,13 @@ public class ConJson<T> {
     public ConJson() {
     }
 
+
     public ConJson(Keycore keycore, Reqmodule requst) {
         this.keycore = keycore;
         this.requst = requst;
     }
 
-    public ConJson(boolean valid){
+    public ConJson(boolean valid) {
         this.keycore = new Keycore().set_isvalid(valid);
     }
 

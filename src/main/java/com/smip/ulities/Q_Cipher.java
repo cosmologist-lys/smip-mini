@@ -27,15 +27,16 @@ public class Q_Cipher {
         }
         return md5;
     }
+
     public static String bytesToHex(byte[] bytes) {
         StringBuffer hexStr = new StringBuffer();
         int num;
         for (int i = 0; i < bytes.length; i++) {
             num = bytes[i];
-            if(num < 0) {
+            if (num < 0) {
                 num += 256;
             }
-            if(num < 16){
+            if (num < 16) {
                 hexStr.append("0");
             }
             hexStr.append(Integer.toHexString(num));
@@ -45,35 +46,39 @@ public class Q_Cipher {
 
     /**
      * 将byte[]转为各种进制的字符串
+     *
      * @param bytes byte[]
      * @param radix 可以转换进制的范围，从Character.MIN_RADIX到Character.MAX_RADIX，超出范围后变为10进制
      * @return 转换后的字符串
      */
-    public static String binary(byte[] bytes, int radix){
+    public static String binary(byte[] bytes, int radix) {
         return new BigInteger(1, bytes).toString(radix);// 这里的1代表正数
     }
 
     /**
      * base 64 encode
+     *
      * @param bytes 待编码的byte[]
      * @return 编码后的base 64 code
      */
-    public static String base64Encode(byte[] bytes){
+    public static String base64Encode(byte[] bytes) {
         return new BASE64Encoder().encode(bytes);
     }
 
     /**
      * base 64 decode
+     *
      * @param base64Code 待解码的base 64 code
      * @return 解码后的byte[]
      * @throws Exception
      */
-    public static byte[] base64Decode(String base64Code) throws Exception{
-        return Q.notNull(base64Code) ?  new BASE64Decoder().decodeBuffer(base64Code) : null;
+    public static byte[] base64Decode(String base64Code) throws Exception {
+        return Q.notNull(base64Code) ? new BASE64Decoder().decodeBuffer(base64Code) : null;
     }
 
     /**
      * 获取byte[]的md5值
+     *
      * @param bytes byte[]
      * @return md5
      * @throws Exception
@@ -86,27 +91,30 @@ public class Q_Cipher {
 
     /**
      * 获取字符串md5值
+     *
      * @param msg
      * @return md5
      * @throws Exception
      */
     public static byte[] md5_(String msg) throws Exception {
-        return Q.notNull(msg) ?  md5(msg.getBytes()) : null;
+        return Q.notNull(msg) ? md5(msg.getBytes()) : null;
     }
 
     /**
      * 结合base64实现md5加密
+     *
      * @param msg 待加密字符串
      * @return 获取md5后转为base64
      * @throws Exception
      */
-    public static String md5Encrypt(String msg) throws Exception{
+    public static String md5Encrypt(String msg) throws Exception {
         return Q.notNull(msg) ? base64Encode(md5_(msg)) : null;
     }
 
     /**
      * AES加密
-     * @param content 待加密的内容
+     *
+     * @param content    待加密的内容
      * @param encryptKey 加密密钥
      * @return 加密后的byte[]
      * @throws Exception
@@ -123,7 +131,8 @@ public class Q_Cipher {
 
     /**
      * AES加密为base 64 code
-     * @param content 待加密的内容
+     *
+     * @param content    待加密的内容
      * @param encryptKey 加密密钥
      * @return 加密后的base 64 code
      * @throws Exception
@@ -134,8 +143,9 @@ public class Q_Cipher {
 
     /**
      * AES解密
+     *
      * @param encryptBytes 待解密的byte[]
-     * @param decryptKey 解密密钥
+     * @param decryptKey   解密密钥
      * @return 解密后的String
      * @throws Exception
      */
@@ -152,32 +162,37 @@ public class Q_Cipher {
 
     /**
      * 将base 64 code AES解密
+     *
      * @param encryptStr 待解密的base 64 code
      * @param decryptKey 解密密钥
      * @return 解密后的string
      * @throws Exception
      */
     public static String aesDecrypt(String encryptStr, String decryptKey) throws Exception {
-        return Q.notNull(encryptStr) ?   aesDecryptByBytes(base64Decode(encryptStr), decryptKey) : null;
+        return Q.notNull(encryptStr) ? aesDecryptByBytes(base64Decode(encryptStr), decryptKey) : null;
     }
 
-    /*public static void main(String[] args) {
-        String content = "beckham";
-        System.out.println("加密前：" + content);
+    /**
+     * 自定义加密，移位字符串
+     * @param from
+     */
+    public static String lysEnigma(String from){
+        return lysEnigma(from,8);
+    }
+    public static String lysEnigma(String from, int index) {
+        from = reverseChar(from);
+        String first = reverseChar(from.substring(0, from.length() - index));
+        String second = reverseChar(from.substring(from.length() - index));
+        return first + second;
+    }
 
-        String key = "156";
-        System.out.println("加密密钥和解密密钥：" + key);
-        try {
-            String encrypt = aesEncrypt(content, key);
-            System.out.println("加密后：" + encrypt);
-
-            String decrypt = aesDecrypt(encrypt, key);
-            System.out.println("解密后：" + decrypt);
-        }catch (Exception e){
-            e.printStackTrace();
+    public static String reverseChar(String from) {
+        char[] froms = from.toCharArray();
+        for (int i = 0; i < from.length() / 2; i++) {
+            char temp = froms[i];
+            froms[i] = froms[froms.length - 1 - i];
+            froms[froms.length - 1 - i] = temp;
         }
-
-
-    }*/
-
+        return String.valueOf(froms);
+    }
 }

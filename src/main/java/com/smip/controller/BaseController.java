@@ -2,8 +2,8 @@ package com.smip.controller;
 
 import com.smip.entity.json.*;
 import com.smip.service.sys.SecuserService;
-import com.smip.ulities.GlobalConstance;
 import com.smip.ulities.Q;
+import com.smip.ulities.SysConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Date;
 
 /**
@@ -30,6 +28,7 @@ public class BaseController<T> {
     private Reqmodule reqmodule = new Reqmodule();
     private Respmodule respmodule = new Respmodule();
     private ConJson json = new ConJson();
+    private UserJson userJson = new UserJson();
 
     @ModelAttribute("tokenModel")
     public ConJson beforeController(HttpServletRequest request) {
@@ -49,14 +48,14 @@ public class BaseController<T> {
                 auth = Integer.parseInt(request.getHeader("auth").toString());
             }
             System.out.println(username + psw);
-            callback_token = secuserService.validUser(username, psw);
-            System.out.println("token=" + callback_token);
-            if (!Q.notNull(callback_token)) {
+            userJson = secuserService.validUser(username, psw);
+            if (!Q.notNull(userJson)) {
                 return new ConJson(false);
             } else {
-                return new ConJson(
-                        keycore
-                                .set_isvalid(true)
+                callback_token = userJson.get_token();
+                System.out.println("token=" + callback_token);
+                json = new ConJson(
+                        keycore.set_isvalid(true)
                                 .set_tkn(username)
                                 .set_auth(auth)
                                 .set_token(callback_token)
@@ -64,10 +63,11 @@ public class BaseController<T> {
                         reqmodule.setReqtime(new Date())
                                 .setUri(request.getRequestURI())
                 );
+                secuserService.saveToken_login(userJson, json);
+                return json;
             }
-        }
-        //非第一次请求，验证token
-        else {
+            //非第一次请求，验证token
+        } else {
             System.out.println("已有token");
             if (secuserService.validToken(request_token)) {
                 callback_token = request_token;
@@ -76,7 +76,7 @@ public class BaseController<T> {
                 if (Q.notNull(comtick)) {
                     _comtick = Integer.parseInt(comtick);
                 }
-                return new ConJson(
+                json = new ConJson(
                         keycore.set_isvalid(true)
                                 .set_tkn(username)
                                 .set_auth(auth)
@@ -85,6 +85,8 @@ public class BaseController<T> {
                         reqmodule.setReqtime(new Date())
                                 .setUri(request.getRequestURI())
                 );
+                secuserService.saveToken_conns(callback_token, json);
+                return json;
             } else {
                 return new ConJson(false);
             }
@@ -134,7 +136,7 @@ public class BaseController<T> {
         respmodule = new Respmodule();
         respmodule.setHttpStatus(HttpStatus.FORBIDDEN)
                 .setDescribe(describe);
-        return new ConJson(keycore,reqmodule,respmodule);
+        return new ConJson(keycore, reqmodule, respmodule);
     }
 
     public ConJson _404() {
@@ -144,11 +146,11 @@ public class BaseController<T> {
         respmodule = new Respmodule();
         respmodule.setHttpStatus(HttpStatus.NOT_FOUND)
                 .setDescribe(describe);
-        return new ConJson(keycore,reqmodule,respmodule);
+        return new ConJson(keycore, reqmodule, respmodule);
     }
 
     public ConJson getConjson(String describe, Object object, ConJson conJson) {
-        int tick = conJson.getKeycore().get_comtick() + 1;
+        int tick = getUserJson(conJson.getKeycore().get_token()).get_comtick();
         respmodule.setDescribe(describe)
                 .setHttpStatus(HttpStatus.OK)
                 .setObject(object)
@@ -157,13 +159,17 @@ public class BaseController<T> {
         conJson.getKeycore().set_comtick(tick);
         String reqtime = conJson.getRequst().getReqtime();
         String resptime = conJson.getResponse().getReptime();
-        if (Q.notNull(reqtime) && Q.notNull(resptime)){
-            reqtime = reqtime.replace("/","");
-            resptime = resptime.replace("/","");
-            double timecost = Double.parseDouble(resptime) -Double.parseDouble(reqtime);
+        if (Q.notNull(reqtime) && Q.notNull(resptime)) {
+            reqtime = reqtime.replace("/", "");
+            resptime = resptime.replace("/", "");
+            double timecost = Double.parseDouble(resptime) - Double.parseDouble(reqtime);
             conJson.getKeycore().set_timecost(timecost);
         }
         conJson.getResponse().setResptype(Q.getClassname(object));
         return conJson;
+    }
+
+    public UserJson getUserJson(String token) {
+        return SysConst.SYS_SECUSER_TOKEN.get(token);
     }
 }
