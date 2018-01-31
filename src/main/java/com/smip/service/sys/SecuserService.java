@@ -19,8 +19,8 @@ public interface SecuserService extends BaseService<Secuser> {
 
     /**
      * 第一次请求，从list里根据用户名密码查找对应secuser
-     * 成功，生成token，并且存储为一个key=token,value=secuser的map
-     * 失败不存储map
+     * 成功，生成token，返回userjson对象
+     * 下一步执行savetoken
      *
      * @param username
      * @param psw
@@ -48,6 +48,7 @@ public interface SecuserService extends BaseService<Secuser> {
     /**
      * 非第一次请求，携带token的请求
      * 根据key=token查找map里是否存在该用户
+     * 下一步执行updatetoken
      *
      * @param token
      * @return boolean
@@ -69,31 +70,33 @@ public interface SecuserService extends BaseService<Secuser> {
      * @param userJson
      * @param conJson
      */
-    default void saveToken_login(UserJson userJson, ConJson conJson) {
+    default void saveToken(UserJson userJson, ConJson conJson) {
         UserJson newJson = new UserJson(conJson, userJson.getSecuser());
         ArrayList list = new ArrayList();
         list.add(conJson.getRequst().getUri());
         newJson.setUris(list);
         SysConst.SYS_SECUSER_TOKEN.put(
-                userJson.get_token(),newJson );
+                userJson.get_token(), newJson);
     }
 
     /**
      * 非第一次请求存userjson到map
+     *
      * @param conJson,token
      */
-    default void saveToken_conns(String token, ConJson conJson) {
+    default UserJson updateToken(String token, ConJson conJson) {
         UserJson userJson = SysConst.SYS_SECUSER_TOKEN.get(token);
         try {
             userJson.set_comtick(userJson.get_comtick() + 1)
                     .setLastReqtime(Q.getDateString(new Date(), DateFmt.CUST))
                     .getUris().add(conJson.getRequst().getUri());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (Q.notNull(userJson)) {
             SysConst.SYS_SECUSER_TOKEN.put(token, userJson);
         }
+        return userJson;
     }
 
     /**

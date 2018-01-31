@@ -33,63 +33,82 @@ public class BaseController<T> {
     @ModelAttribute("tokenModel")
     public ConJson beforeController(HttpServletRequest request) {
         logger.info("token valid {baseController.beforeController}");
-        String username = null,
-                psw = null,
-                request_token = null,
-                callback_token = null;
+        String token = request.getHeader("_token");
+        if (!Q.notNull(token)){
+            return login(request);
+        }else{
+            return conns(request,token);
+        }
+    }
+
+    /**
+     * headers={username,psw,auth,unitcode}，第一次请求 = 登陆
+     * @param request
+     * @return
+     */
+    public ConJson login(HttpServletRequest request) {
+        System.out.println("第一次请求");
+        String username = request.getHeader("username");
+        String psw = request.getHeader("psw");
         int auth = 0;
-        request_token = request.getHeader("_token");
-        //第一次请求_token空,验证用户名密码
-        if (!Q.notNull(request_token)) {
-            System.out.println("第一次请求");
-            username = request.getHeader("username");
-            psw = request.getHeader("psw");
-            if (Q.notNull(request.getHeader("auth"))) {
-                auth = Integer.parseInt(request.getHeader("auth").toString());
-            }
-            System.out.println(username + psw);
-            userJson = secuserService.validUser(username, psw);
-            if (!Q.notNull(userJson)) {
-                return new ConJson(false);
-            } else {
-                callback_token = userJson.get_token();
-                System.out.println("token=" + callback_token);
-                json = new ConJson(
-                        keycore.set_isvalid(true)
-                                .set_tkn(username)
-                                .set_auth(auth)
-                                .set_token(callback_token)
-                                .set_comtick(0),
-                        reqmodule.setReqtime(new Date())
-                                .setUri(request.getRequestURI())
-                );
-                secuserService.saveToken_login(userJson, json);
-                return json;
-            }
-            //非第一次请求，验证token
+        String unitCode = null;
+        if (Q.notNull(request.getHeader("auth"))) {
+            auth = Integer.parseInt(request.getHeader("auth").toString());
+        }
+        if (Q.notNull(request.getHeader("unit_code"))) {
+            unitCode = request.getHeader("unit_code").toString();
+        }
+        System.out.println(username + psw);
+        userJson = secuserService.validUser(username, psw);
+        if (!Q.notNull(userJson) && !Q.notNull(userJson.getSecuser())) {
+            return new ConJson(false);
         } else {
-            System.out.println("已有token");
-            if (secuserService.validToken(request_token)) {
-                callback_token = request_token;
-                String comtick = request.getHeader("tick");
-                int _comtick = 0;
-                if (Q.notNull(comtick)) {
-                    _comtick = Integer.parseInt(comtick);
-                }
-                json = new ConJson(
-                        keycore.set_isvalid(true)
-                                .set_tkn(username)
-                                .set_auth(auth)
-                                .set_token(callback_token)
-                                .set_comtick(_comtick),
-                        reqmodule.setReqtime(new Date())
-                                .setUri(request.getRequestURI())
-                );
-                secuserService.saveToken_conns(callback_token, json);
-                return json;
-            } else {
-                return new ConJson(false);
-            }
+            String token = userJson.get_token();
+            System.out.println("token=" + token);
+            json = new ConJson(
+                    keycore.set_isvalid(true)
+                            .set_tkn(username)
+                            .set_auth(auth)
+                            .set_token(token)
+                            .set_unit_code(unitCode)
+                            .set_comtick(0),
+                    reqmodule.setReqtime(new Date())
+                            .setUri(request.getRequestURI())
+            );
+            secuserService.saveToken(userJson, json);
+            return json;
+        }
+    }
+
+    /**
+     * headers={token,auth} 已经登陆之后发送的request请求
+     * conns : connections and communications
+     * @param request
+     * @param token
+     * @return
+     */
+    public ConJson conns(HttpServletRequest request, String token) {
+        System.out.println("已有token");
+        if (!secuserService.validToken(token)) {
+            return new ConJson(false);
+        } else {
+            userJson = secuserService.updateToken(
+                    token, new ConJson(
+                            keycore,
+                            reqmodule.setUri(request.getRequestURI())
+                                    .setReqtime(new Date()))
+            );
+            json = new ConJson(
+                    keycore.set_isvalid(userJson.is_isvalid())
+                            .set_auth(userJson.get_auth())
+                            .set_unit_code(userJson.get_unit_code())
+                            .set_token(userJson.get_token())
+                            .set_comtick(userJson.get_comtick())
+                            .set_tkn(userJson.getSecuser().getUserName()),
+                    reqmodule.setReqtime(new Date())
+                            .setUri(request.getRequestURI())
+            );
+            return json;
         }
     }
 
@@ -129,6 +148,11 @@ public class BaseController<T> {
         return getConjson(describe, flg, conJson);
     }
 
+    /**
+     * 请求的token错误、登陆的密码错误、用户的权限错误时
+     * 返回没有权限的提示
+     * @return
+     */
     public ConJson FORBIDDEN() {
         String _chn = "没有访问权限";
         String _eng = "no permission authorited";
@@ -139,6 +163,18 @@ public class BaseController<T> {
         return new ConJson(keycore, reqmodule, respmodule);
     }
 
+    public ConJson FORBIDDEN(String tag){
+        respmodule = new Respmodule();
+        respmodule.setHttpStatus(HttpStatus.FORBIDDEN)
+                .setDescribe(tag);
+        return new ConJson(keycore, reqmodule, respmodule);
+    }
+
+    /**
+     * 请求了一个不存在的url时返回404
+     * todo
+     * @return
+     */
     public ConJson _404() {
         String _chn = "404 未找到指定URL";
         String _eng = "404 NOT FOUND";
@@ -149,14 +185,19 @@ public class BaseController<T> {
         return new ConJson(keycore, reqmodule, respmodule);
     }
 
+    /**
+     * 抽离共用部分。打包conjson
+     * @param describe
+     * @param object
+     * @param conJson
+     * @return
+     */
     public ConJson getConjson(String describe, Object object, ConJson conJson) {
-        int tick = getUserJson(conJson.getKeycore().get_token()).get_comtick();
         respmodule.setDescribe(describe)
                 .setHttpStatus(HttpStatus.OK)
                 .setObject(object)
                 .setReptime(new Date());
         conJson.setResponse(respmodule);
-        conJson.getKeycore().set_comtick(tick);
         String reqtime = conJson.getRequst().getReqtime();
         String resptime = conJson.getResponse().getReptime();
         if (Q.notNull(reqtime) && Q.notNull(resptime)) {
@@ -169,7 +210,27 @@ public class BaseController<T> {
         return conJson;
     }
 
+    /**
+     * 根据token查找存在map里的用户
+     * @param token
+     * @return
+     */
     public UserJson getUserJson(String token) {
         return SysConst.SYS_SECUSER_TOKEN.get(token);
+    }
+
+    /**
+     * FOBIDDEN返回中英提示
+     * @param eng
+     * @param chn
+     * @return
+     */
+    public String getDescribe(String eng,String chn){
+        if (Q.notNull(eng,chn))
+            return eng + "/" + chn;
+        else if (Q.notNull(eng) && !Q.notNull(chn))
+            return eng;
+        else
+            return chn;
     }
 }

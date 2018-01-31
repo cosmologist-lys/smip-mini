@@ -27,4 +27,6 @@ public interface BaseService<T> {
 
     T save(T t);
     List<T> save(List<T> t);
+
+    void update(T t);
 }

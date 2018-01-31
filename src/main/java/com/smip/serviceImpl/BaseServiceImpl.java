@@ -101,4 +101,10 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     public boolean exist(int id) {
         return baseRepository.exists(id);
     }
+
+    @Override
+    @Transactional(rollbackFor = {SpelEvaluationException.class,Exception.class})
+    public void update(T t) {
+        baseRepository.saveAndFlush(t);
+    }
 }
