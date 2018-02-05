@@ -72,7 +72,7 @@ public class BscresidentController extends BaseController<Bscresident> {
         return OK(describe, bscresidentService.count(bscresident), conJson);
     }
 
-    @ApiOperation(value = "根据PAGE查询多个居民", response = ConJson.class)
+    @ApiOperation(value = "翻页查询多个居民", response = ConJson.class)
     @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.GET)
     public ConJson findManyByPage(@PathVariable("page") int page, @PathVariable("size") int size, @ModelAttribute("tokenModel") ConJson conJson) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
@@ -105,7 +105,7 @@ public class BscresidentController extends BaseController<Bscresident> {
 
     @ApiOperation(value = "根据条件查询居民是否存在", response = ConJson.class)
     @RequestMapping(value = "/exist/one", method = RequestMethod.POST)
-    public ConJson isExistByCondition(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ConJson conJson) {
+    public ConJson isExistByOne(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ConJson conJson) {
         describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
         return OK(describe, bscresidentService.exist(bscresident), conJson);

@@ -60,7 +60,7 @@ public class BaseController<T> {
         }
         System.out.println(username + psw);
         userJson = secuserService.validUser(username, psw);
-        if (!Q.notNull(userJson) && !Q.notNull(userJson.getSecuser())) {
+        if (!Q.notNull(userJson)) {
             return new ConJson(false);
         } else {
             String token = userJson.get_token();

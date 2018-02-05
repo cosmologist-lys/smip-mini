@@ -3,6 +3,7 @@ package com.smip.controller.basement;
 import com.smip.controller.BaseController;
 import com.smip.entity.basement.Company;
 import com.smip.entity.json.ConJson;
+import com.smip.error.ErrorDescribe;
 import com.smip.service.basement.CompanyService;
 import com.smip.ulities.Q;
 import com.smip.ulities.Q_Cpnt;
@@ -14,14 +15,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Api(value = "/company", description = "公司信息", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "/company", description = "公司信息,该项目只存在一个，所以uri不包含one修饰", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 @RequestMapping(value = "/company")
 public class CompanyController extends BaseController<Company> {
     @Autowired
     private CompanyService companyService;
     private String describe;
-    private Company company = new Company();
+    private Company editcompany;
 
     @Override
     public ConJson beforeController(HttpServletRequest request) {
@@ -45,9 +46,7 @@ public class CompanyController extends BaseController<Company> {
             companyService.update(company);
             return OK(describe, true, conJson);
         }else{
-            String warn_eng = "update object must apply the key:id";
-            String warn_chn = "更新对象必须传入主键id";
-            return FORBIDDEN(getDescribe(warn_eng, warn_chn));
+            return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
         }
     }
 
@@ -58,17 +57,40 @@ public class CompanyController extends BaseController<Company> {
         if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
         if (Q.notNull(company) && !Q.notNull(company.getId())) {//不存在id是保存
             if (Q.notNull(companyService.find())){
-                String warn_eng = "this table can only apply one row";
-                String warn_chn = "此表只能保存至多一条内容";
-                return FORBIDDEN(getDescribe(warn_eng, warn_chn));
+                return FORBIDDEN(ErrorDescribe.ONE_ROW_ONLY_SAVE.getDescribe());
             }
             company = companyService.save(company);
             return (Q.notNull(company)) ?
                     OK(describe, true, conJson) : OK(describe, false, conJson);
         } else {
-            String warn_eng = "save object cannot applied the key:id";
-            String warn_chn = "保存对象时不能传入主键id";
-            return FORBIDDEN(getDescribe(warn_eng, warn_chn));
+            return FORBIDDEN(ErrorDescribe.EXCLUDE_ID_SAVE.getDescribe());
+        }
+    }
+
+    @ApiOperation(value = "删除公司信息(默认删除，不需要传递id等信息)", response = ConJson.class)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public ConJson deleteByOne( @ModelAttribute("tokenModel") ConJson conJson) {
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (null != companyService.findAll()){
+            editcompany = companyService.findAll().get(0);
+            companyService.deleteOne(editcompany.getId());
+            return OK(describe,true,conJson);
+        }else{
+            return FORBIDDEN(ErrorDescribe.EMPTY_TABLE_OPTION.getDescribe());
+        }
+    }
+
+    @ApiOperation(value = "删除公司信息(传递id)", response = ConJson.class)
+    @RequestMapping(value = "/delete/id/{id}", method = RequestMethod.GET)
+    public ConJson deleteByOne( @ModelAttribute("tokenModel") ConJson conJson , @PathVariable("id") int id) {
+        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (id > 0){
+            companyService.deleteOne(id);
+            return OK(describe,true,conJson);
+        }else{
+            return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
         }
     }
 
