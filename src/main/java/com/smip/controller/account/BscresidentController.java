@@ -4,6 +4,7 @@ package com.smip.controller.account;
 import com.smip.controller.BaseController;
 import com.smip.entity.account.Bscresident;
 import com.smip.entity.json.ConJson;
+import com.smip.error.ErrorDescribe;
 import com.smip.service.account.BscresidentService;
 import com.smip.ulities.Q;
 import com.smip.ulities.Q_Cpnt;
@@ -18,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Api(value = "/resident", description = "居民信息", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
@@ -32,130 +34,112 @@ public class BscresidentController extends BaseController<Bscresident> {
         return super.beforeController(request);
     }
 
-    @ApiOperation(value = "获取单个居民", response = ConJson.class)
+    @ApiOperation(value = "根据id获取居民信息", response = ConJson.class)
     @RequestMapping(value = "/query/id/{id}", method = RequestMethod.GET)
-    public ConJson findOneById(@PathVariable("id") int id, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        return OK(describe, bscresidentService.findOne(id), conJson);
+    public ConJson queryById(@ModelAttribute("tokenModel") ConJson conJson, @PathVariable("id") int id){
+        return super.findById(conJson,id);
     }
 
-    @ApiOperation(value = "根据条件获取单个居民", response = ConJson.class)
+    @ApiOperation(value = "根据条件获取居民信息", response = ConJson.class)
     @RequestMapping(value = "/query/one", method = RequestMethod.POST)
-    public ConJson findOneByCondition(@RequestBody Bscresident person, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        return OK(describe, bscresidentService.findOne(person), conJson);
+    public ConJson findByOne(@ModelAttribute("tokenModel") ConJson conJson, @RequestBody Bscresident person){
+        return super.findByCondition(conJson,person);
     }
 
-    @ApiOperation(value = "根据name查询居民(模糊匹配)", response = ConJson.class)
-    @RequestMapping(value = "/query/name/{name}", method = RequestMethod.GET)
-    public ConJson queryByNameLike(@PathVariable("name") String name, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        return OK(describe, bscresidentService.findByNameLike(name), conJson);
-    }
-
-    @ApiOperation(value = "查询居民总条数", response = ConJson.class)
+    @ApiOperation(value = "获取居民信息总条数", response = ConJson.class)
     @RequestMapping(value = "/count", method = RequestMethod.GET)
-    public ConJson countAll(@ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        return OK(describe, bscresidentService.count(), conJson);
+    public ConJson count(@ModelAttribute("tokenModel") ConJson conJson){
+        return super.countAll(conJson);
     }
 
-    @ApiOperation(value = "根据条件查询居民个数", response = ConJson.class)
+    @ApiOperation(value = "根据条件获取居民信息总条数", response = ConJson.class)
     @RequestMapping(value = "/count/one", method = RequestMethod.POST)
-    public ConJson countByConditions(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        return OK(describe, bscresidentService.count(bscresident), conJson);
+    public ConJson countOne(@ModelAttribute("tokenModel") ConJson conJson, @RequestBody Bscresident person){
+        return super.countByCondition(conJson,person);
     }
 
-    @ApiOperation(value = "翻页查询多个居民", response = ConJson.class)
+    @ApiOperation(value = "翻页查询多个居民信息", response = ConJson.class)
     @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.GET)
     public ConJson findManyByPage(@PathVariable("page") int page, @PathVariable("size") int size, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        Pageable pageable = new PageRequest(page, size, Sort.Direction.DESC, "id");
-        Page<Bscresident> persons = bscresidentService.findListByObject(new Bscresident(), pageable);
-        return OK(describe, persons, conJson);
+        return super.findManyByUri(page,size,conJson,new Bscresident());
     }
 
-    @ApiOperation(value = "根据PAGE查询多个居民", response = ConJson.class)
+    @ApiOperation(value = "翻页查询多个居民信息", response = ConJson.class)
     @RequestMapping(value = "/query/sort", method = RequestMethod.GET)
     public ConJson findManyByPageParam(@RequestParam(value = "page", required = true, defaultValue = "1") Integer page,
                                        @RequestParam(value = "limit", required = true, defaultValue = "12") Integer limit,
                                        @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        System.out.println("page,limit=" + page + " " + limit);
-        Pageable pageable = new PageRequest(page, limit, Sort.Direction.DESC, "id");
-        Page<Bscresident> persons = bscresidentService.findListByObject(new Bscresident(), pageable);
-        return OK(describe, persons, conJson);
+        return super.findManyByParam(page,limit,conJson,new Bscresident());
     }
 
-    @ApiOperation(value = "根据id查找居民是否存在", response = ConJson.class)
-    @RequestMapping(value = "/exist/{id}", method = RequestMethod.GET)
-    public ConJson isExistById(@PathVariable("id") int id, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        return OK(describe, bscresidentService.exist(id), conJson);
+
+    @ApiOperation(value = "根据id查找区域是否存在", response = ConJson.class)
+    @RequestMapping(value = "/exist/id/{id}", method = RequestMethod.GET)
+    public ConJson isExistById(@ModelAttribute("tokenModel") ConJson conJson, @PathVariable("id") int id) {
+        return super.isExistById(conJson,id);
     }
 
-    @ApiOperation(value = "根据条件查询居民是否存在", response = ConJson.class)
+    @ApiOperation(value = "根据条件查找区域是否存在", response = ConJson.class)
     @RequestMapping(value = "/exist/one", method = RequestMethod.POST)
-    public ConJson isExistByOne(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        return OK(describe, bscresidentService.exist(bscresident), conJson);
+    public ConJson isExistByOne(@ModelAttribute("tokenModel") ConJson conJson, @RequestBody Bscresident person) {
+        return super.isExistByCondition(conJson,person);
     }
 
-    @ApiOperation(value = "保存单个居民", response = ConJson.class)
-    @RequestMapping(value = "/save/one", method = RequestMethod.POST)
-    public ConJson saveOne(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        Bscresident person = bscresidentService.save(bscresident);
-        if (Q.notNull(person)) {
-            return OK(describe, true, conJson);
-        } else {
-            return OK(describe, false, conJson);
+    @ApiOperation(value = "修改单个居民信息", response = ConJson.class)
+    @RequestMapping(value = "/edit/one", method = RequestMethod.POST)
+    public ConJson edit(@ModelAttribute("tokenModel") ConJson conJson, @RequestBody Bscresident person) {
+        return super.edit(conJson,person,person.getId());
+    }
+
+    @ApiOperation(value = "批量修改居民信息", response = ConJson.class)
+    @RequestMapping(value = "/edit/many", method = RequestMethod.POST)
+    public ConJson editMany(@ModelAttribute("tokenModel") ConJson conJson, @RequestBody List<Bscresident> personList) {
+        for (Bscresident comm : personList){
+            if (!Q.notNull(comm.getId())){ //update必须带有id
+                return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
+            }
         }
+        return super.editMany(conJson,personList);
+    }
+
+    @ApiOperation(value = "新增单个居民信息", response = ConJson.class)
+    @RequestMapping(value = "/save/one", method = RequestMethod.PUT)
+    public ConJson save(@ModelAttribute("tokenModel") ConJson conJson, @RequestBody Bscresident person) {
+        return super.save(conJson,person,person.getId());
+    }
+
+    @ApiOperation(value = "批量新增居民信息", response = ConJson.class)
+    @RequestMapping(value = "/save/many", method = RequestMethod.PUT)
+    public ConJson saveMany(@ModelAttribute("tokenModel") ConJson conJson, @RequestBody List<Bscresident> personList) {
+        for (Bscresident comm : personList){
+            if (Q.notNull(comm.getId())){  //save不能带有id
+                return FORBIDDEN(ErrorDescribe.EXCLUDE_ID_SAVE.getDescribe());
+            }
+        }
+        return super.saveMany(conJson,personList);
     }
 
     @ApiOperation(value = "根据id删除单个居民", response = ConJson.class)
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public ConJson deleteOneById(@PathVariable("id") int id, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        bscresidentService.deleteOne(id);
-        return OK(describe, true, conJson);
+    @RequestMapping(value = "/delete/id/{id}", method = RequestMethod.DELETE)
+    public ConJson deleteById(@ModelAttribute("tokenModel") ConJson conJson, @PathVariable("id") int id) {
+        return super.deleteById(conJson,id);
     }
 
     @ApiOperation(value = "根据条件删除单个居民", response = ConJson.class)
     @RequestMapping(value = "/delete/one", method = RequestMethod.DELETE)
-    public ConJson deleteObject(@RequestBody Bscresident bscresident, @ModelAttribute("tokenModel") ConJson conJson) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        bscresidentService.deleteOne(bscresident);
-        return OK(describe, true, conJson);
+    public ConJson deleteByOne(@ModelAttribute("tokenModel") ConJson conJson, @RequestBody Bscresident person) {
+        return super.deleteByOne(conJson,person,person.getId());
     }
-    /*@Override
 
-    @ApiOperation(value="根据条件查询居民",response = FeedbackJson.class)
-    @RequestMapping(value="/query/condition", method=RequestMethod.GET)
-    public FeedbackJson complexQuery(HttpServletRequest req, @ModelAttribute("tokenModel") ReqHeadersMsg header) {
-        describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
-        if (!header.isValid()) return FORBIDDEN(header);
-        Bscresident person = new Bscresident();
-        if (Q.notNull(req)){
-            String code = req.getParameter("code");
-            String tel = req.getParameter("tel");
-            System.out.println("code="+code+" tel="+tel);
-            person = bscresidentService.complexFind(code,tel);
+    @ApiOperation(value = "根据条件批量删除居民", response = ConJson.class)
+    @RequestMapping(value = "/delete/many", method = RequestMethod.DELETE)
+    public ConJson deleteMany(@ModelAttribute("tokenModel") ConJson conJson, @RequestBody List<Bscresident> personList) {
+        for (Bscresident comm : personList){
+            if (!Q.notNull(comm) || !Q.notNull(comm.getId()) ){  //delete必须带有id
+                return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
+            }
         }
-        return OK(describe,person,header);
-    } */
+        return super.deleteMany(conJson,personList);
+    }
 
 }

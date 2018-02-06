@@ -107,4 +107,9 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     public void update(T t) {
         baseRepository.saveAndFlush(t);
     }
+
+    @Override
+    public void update(List<T> ts) {
+        baseRepository.save(ts);
+    }
 }

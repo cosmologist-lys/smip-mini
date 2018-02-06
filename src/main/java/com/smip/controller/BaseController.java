@@ -1,18 +1,24 @@
 package com.smip.controller;
 
 import com.smip.entity.json.*;
+import com.smip.error.ErrorDescribe;
+import com.smip.service.BaseService;
 import com.smip.service.sys.SecuserService;
 import com.smip.ulities.Q;
+import com.smip.ulities.Q_Cpnt;
 import com.smip.ulities.SysConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 /**
  * controller父类。公共函数beforeController验证合法性
@@ -21,6 +27,8 @@ import java.util.Date;
 public class BaseController<T> {
     @Autowired
     private SecuserService secuserService;
+    @Autowired
+    private BaseService<T> baseService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -34,15 +42,16 @@ public class BaseController<T> {
     public ConJson beforeController(HttpServletRequest request) {
         logger.info("token valid {baseController.beforeController}");
         String token = request.getHeader("_token");
-        if (!Q.notNull(token)){
+        if (!Q.notNull(token)) {
             return login(request);
-        }else{
-            return conns(request,token);
+        } else {
+            return conns(request, token);
         }
     }
 
     /**
      * headers={username,psw,auth,unitcode}，第一次请求 = 登陆
+     *
      * @param request
      * @return
      */
@@ -83,6 +92,7 @@ public class BaseController<T> {
     /**
      * headers={token,auth} 已经登陆之后发送的request请求
      * conns : connections and communications
+     *
      * @param request
      * @param token
      * @return
@@ -151,6 +161,7 @@ public class BaseController<T> {
     /**
      * 请求的token错误、登陆的密码错误、用户的权限错误时
      * 返回没有权限的提示
+     *
      * @return
      */
     public ConJson FORBIDDEN() {
@@ -163,7 +174,7 @@ public class BaseController<T> {
         return new ConJson(keycore, reqmodule, respmodule);
     }
 
-    public ConJson FORBIDDEN(String tag){
+    public ConJson FORBIDDEN(String tag) {
         respmodule = new Respmodule();
         respmodule.setHttpStatus(HttpStatus.FORBIDDEN)
                 .setDescribe(tag);
@@ -173,6 +184,7 @@ public class BaseController<T> {
     /**
      * 请求了一个不存在的url时返回404
      * todo
+     *
      * @return
      */
     public ConJson _404() {
@@ -187,6 +199,7 @@ public class BaseController<T> {
 
     /**
      * 抽离共用部分。打包conjson
+     *
      * @param describe
      * @param object
      * @param conJson
@@ -212,6 +225,7 @@ public class BaseController<T> {
 
     /**
      * 根据token查找存在map里的用户
+     *
      * @param token
      * @return
      */
@@ -221,16 +235,242 @@ public class BaseController<T> {
 
     /**
      * FOBIDDEN返回中英提示
+     *
      * @param eng
      * @param chn
      * @return
      */
-    public String getDescribe(String eng,String chn){
-        if (Q.notNull(eng,chn))
+    public String getDescribe(String eng, String chn) {
+        if (Q.notNull(eng, chn))
             return eng + "/" + chn;
         else if (Q.notNull(eng) && !Q.notNull(chn))
             return eng;
         else
             return chn;
+    }
+
+    /**
+     * update数据，必须带有id
+     * 父类做基本流程
+     *
+     * @param conJson
+     * @param t
+     * @return
+     */
+    public ConJson<T> edit(ConJson conJson, T t, Integer id) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(t)) return FORBIDDEN(ErrorDescribe.EMPTY_OBJECT_OPTION.getDescribe());
+        if (!Q.notNull(id)) return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
+        baseService.update(t);
+        return OK(describe, true, conJson);
+    }
+
+    /**
+     * 批量update,每个对象必须带id,在子类判断
+     *
+     * @param conJson
+     * @param ts
+     * @return
+     */
+    public ConJson<T> editMany(ConJson conJson, List<T> ts) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(ts)) return FORBIDDEN(ErrorDescribe.EMPTY_OBJECT_OPTION.getDescribe());
+        baseService.update(ts);
+        return OK(describe, true, conJson);
+    }
+
+    /**
+     * save数据，必须不带id
+     * 父类做基本流程
+     *
+     * @param conJson
+     * @param t
+     * @return
+     */
+    public ConJson save(ConJson conJson, T t, Integer id) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(t)) return FORBIDDEN(ErrorDescribe.EMPTY_OBJECT_OPTION.getDescribe());
+        if (Q.notNull(id)) return FORBIDDEN(ErrorDescribe.EXCLUDE_ID_SAVE.getDescribe());
+        Object editT = baseService.save(t);
+        return Q.notNull(editT) ?
+                OK(describe, true, conJson) : OK(describe, false, conJson);
+    }
+
+    /**
+     * 批量save数据，必须不带id,交给子类判断
+     *
+     * @param conJson
+     * @param ts
+     * @return
+     */
+    public ConJson saveMany(ConJson conJson, List<T> ts) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(ts)) return FORBIDDEN(ErrorDescribe.EMPTY_OBJECT_OPTION.getDescribe());
+        List<T> saveT = baseService.save(ts);
+        return Q.notNull(saveT) && saveT.size() == ts.size() ?
+                OK(describe, true, conJson) : OK(describe, false, conJson);
+    }
+
+    /**
+     * 根据id删除
+     *
+     * @param conJson
+     * @param id
+     * @return
+     */
+    public ConJson deleteById(ConJson conJson, Integer id) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(id) && id > 0) return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
+        baseService.deleteOne(id);
+        return OK(describe, true, conJson);
+    }
+
+    /**
+     * 根据对象删除。必须带id
+     *
+     * @param conJson
+     * @param t
+     * @param id
+     * @return
+     */
+    public ConJson deleteByOne(ConJson conJson, T t, Integer id) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(t)) return FORBIDDEN(ErrorDescribe.EMPTY_OBJECT_OPTION.getDescribe());
+        if (Q.notNull(id) && id > 0) {
+            baseService.deleteOne(id);
+        } else {
+            return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
+        }
+        return OK(describe, true, conJson);
+    }
+
+    /**
+     * 批量删除，必须带有id，交给子类判断
+     *
+     * @param conJson
+     * @param ts
+     * @return
+     */
+    public ConJson deleteMany(ConJson conJson, List<T> ts) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(ts)) return FORBIDDEN(ErrorDescribe.EMPTY_OBJECT_OPTION.getDescribe());
+        baseService.deleteList(ts);
+        return OK(describe, true, conJson);
+    }
+
+    /**
+     * 根据id查找
+     *
+     * @param conJson
+     * @param id
+     * @return
+     */
+    public ConJson findById(ConJson conJson, Integer id) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(id) || !(id > 0)) return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
+        return OK(describe, baseService.findOne(id), conJson);
+    }
+
+    /**
+     * 根据条件查找
+     *
+     * @param conJson
+     * @param t
+     * @return
+     */
+    public ConJson findByCondition(ConJson conJson, T t) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(t)) return FORBIDDEN(ErrorDescribe.EMPTY_OBJECT_OPTION.getDescribe());
+        return OK(describe, baseService.findOne(t), conJson);
+    }
+
+    /**
+     * 获取该表总条数
+     *
+     * @param conJson
+     * @return
+     */
+    public ConJson countAll(ConJson conJson) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        return OK(describe, baseService.count(), conJson);
+    }
+
+    /**
+     * 根据条件查询总条数
+     *
+     * @param conJson
+     * @param t
+     * @return
+     */
+    public ConJson countByCondition(ConJson conJson, T t) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(t)) return FORBIDDEN(ErrorDescribe.EMPTY_OBJECT_OPTION.getDescribe());
+        return OK(describe, baseService.count(), conJson);
+    }
+
+    /**
+     * 翻页查询，方式1,uri方式传递
+     *
+     * @param page
+     * @param size
+     * @param conJson
+     * @return
+     */
+    public ConJson findManyByUri(Integer page, Integer size, ConJson conJson, T t) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(page, size)) return FORBIDDEN(ErrorDescribe.EMPTY_PARAMS_OPTION.getDescribe());
+        return OK(describe, baseService.findListByObject(t, new PageRequest(page, size, Sort.Direction.DESC, "id")), conJson);
+    }
+
+    /**
+     * 翻页查询，方式2，params方式传递
+     *
+     * @param page
+     * @param limit
+     * @param conJson
+     * @return
+     */
+    public ConJson findManyByParam(Integer page, Integer limit, ConJson conJson,T t) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        return OK(describe, baseService.findListByObject(t, new PageRequest(page, limit, Sort.Direction.DESC, "id")), conJson);
+    }
+
+    /**
+     * 根据id查找是否存在
+     * @param conJson
+     * @param id
+     * @return
+     */
+    public ConJson isExistById(ConJson conJson, Integer id) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(id) || !(id>0))return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
+        return OK(describe, baseService.exist(id), conJson);
+    }
+
+    /**
+     * 根据条件查找是否存在
+     * @param conJson
+     * @param t
+     * @return
+     */
+    public ConJson isExistByCondition(ConJson conJson, T t) {
+        String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
+        if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
+        if (!Q.notNull(t)) return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
+        return OK(describe, baseService.exist(t), conJson);
     }
 }

@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class Community {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "BSCCOMMUNITY_ID_SEQ" )
-    @SequenceGenerator(sequenceName = "BSCCOMMUNITY_ID_SEQ", allocationSize = 1, name = "BSCCOMMUNITY_ID_SEQ")
+    @SequenceGenerator(sequenceName = "BSCCOMMUNITY_ID_SEQ", allocationSize = 10, name = "BSCCOMMUNITY_ID_SEQ")
     @Column(name = "id",nullable = false)
     private Integer id;
     @NotNull
