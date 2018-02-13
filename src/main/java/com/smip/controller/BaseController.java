@@ -165,12 +165,9 @@ public class BaseController<T> {
      * @return
      */
     public ConJson FORBIDDEN() {
-        String _chn = "没有访问权限";
-        String _eng = "no permission authorited";
-        String describe = _chn + "/" + _eng;
         respmodule = new Respmodule();
         respmodule.setHttpStatus(HttpStatus.FORBIDDEN)
-                .setDescribe(describe);
+                .setDescribe(ErrorDescribe.LIMITED_PERMISSION.getDescribe());
         return new ConJson(keycore, reqmodule, respmodule);
     }
 
@@ -187,13 +184,10 @@ public class BaseController<T> {
      *
      * @return
      */
-    public ConJson _404() {
-        String _chn = "404 未找到指定URL";
-        String _eng = "404 NOT FOUND";
-        String describe = _chn + "/" + _eng;
+    public ConJson NOTFOUND() {
         respmodule = new Respmodule();
         respmodule.setHttpStatus(HttpStatus.NOT_FOUND)
-                .setDescribe(describe);
+                .setDescribe(ErrorDescribe.NOT_FOUND.getDescribe());
         return new ConJson(keycore, reqmodule, respmodule);
     }
 
@@ -211,7 +205,7 @@ public class BaseController<T> {
                 .setObject(object)
                 .setReptime(new Date());
         conJson.setResponse(respmodule);
-        String reqtime = conJson.getRequst().getReqtime();
+        String reqtime = conJson.getRequest().getReqtime();
         String resptime = conJson.getResponse().getReptime();
         if (Q.notNull(reqtime) && Q.notNull(resptime)) {
             reqtime = reqtime.replace("/", "");
@@ -233,21 +227,6 @@ public class BaseController<T> {
         return SysConst.SYS_SECUSER_TOKEN.get(token);
     }
 
-    /**
-     * FOBIDDEN返回中英提示
-     *
-     * @param eng
-     * @param chn
-     * @return
-     */
-    public String getDescribe(String eng, String chn) {
-        if (Q.notNull(eng, chn))
-            return eng + "/" + chn;
-        else if (Q.notNull(eng) && !Q.notNull(chn))
-            return eng;
-        else
-            return chn;
-    }
 
     /**
      * update数据，必须带有id
@@ -442,7 +421,7 @@ public class BaseController<T> {
      * @param conJson
      * @return
      */
-    public ConJson findManyByParam(Integer page, Integer limit, ConJson conJson,T t) {
+    public ConJson findManyByParam(Integer page, Integer limit, ConJson conJson, T t) {
         String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
         return OK(describe, baseService.findListByObject(t, new PageRequest(page, limit, Sort.Direction.DESC, "id")), conJson);
@@ -450,6 +429,7 @@ public class BaseController<T> {
 
     /**
      * 根据id查找是否存在
+     *
      * @param conJson
      * @param id
      * @return
@@ -457,12 +437,13 @@ public class BaseController<T> {
     public ConJson isExistById(ConJson conJson, Integer id) {
         String describe = Q_Cpnt.getMethodDiscribe(Q_Cpnt.getMethodName());
         if (!conJson.getKeycore().is_isvalid()) return FORBIDDEN();
-        if (!Q.notNull(id) || !(id>0))return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
+        if (!Q.notNull(id) || !(id > 0)) return FORBIDDEN(ErrorDescribe.EMPTY_ID_OPTION.getDescribe());
         return OK(describe, baseService.exist(id), conJson);
     }
 
     /**
      * 根据条件查找是否存在
+     *
      * @param conJson
      * @param t
      * @return

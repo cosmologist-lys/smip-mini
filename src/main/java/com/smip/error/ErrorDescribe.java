@@ -10,7 +10,10 @@ public enum ErrorDescribe {
     ONE_ROW_ONLY_SAVE("this table can only apply one row","此表只能保存至多一条内容"),
     EXCLUDE_ID_SAVE("cannot save items via an object with id","保存对象不可包含id参数"),
     TABLE_LIMITS("cannot execute this on a table with length limit","无法在固定长度的表里执行此操作"),
-    EMPTY_PARAMS_OPTION("params are need indeed but empty","参数不可为空");
+    EMPTY_PARAMS_OPTION("params are need indeed but empty","参数不可为空"),
+
+    LIMITED_PERMISSION("no permission authorited","没有访问权限"),
+    NOT_FOUND("404 not found","错误的URL地址");
 
 
     private String eng;

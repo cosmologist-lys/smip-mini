@@ -6,12 +6,12 @@ package com.smip.entity.json;
  */
 public class ConJson<T> {
     private Keycore keycore;
-    private Reqmodule requst;
+    private Reqmodule request;
     private Respmodule response;
 
     public ConJson(Keycore keycore, Reqmodule requst, Respmodule response) {
         this.keycore = keycore;
-        this.requst = requst;
+        this.request = requst;
         this.response = response;
     }
 
@@ -21,7 +21,7 @@ public class ConJson<T> {
 
     public ConJson(Keycore keycore, Reqmodule requst) {
         this.keycore = keycore;
-        this.requst = requst;
+        this.request = requst;
     }
 
     public ConJson(boolean valid) {
@@ -32,7 +32,7 @@ public class ConJson<T> {
     public String toString() {
         return "ConJson{" +
                 "keycore=" + keycore +
-                ", requst=" + requst +
+                ", requst=" + request +
                 ", response=" + response +
                 '}';
     }
@@ -46,12 +46,12 @@ public class ConJson<T> {
         return this;
     }
 
-    public Reqmodule getRequst() {
-        return requst;
+    public Reqmodule getRequest() {
+        return request;
     }
 
-    public ConJson setRequst(Reqmodule requst) {
-        this.requst = requst;
+    public ConJson setRequest(Reqmodule requst) {
+        this.request = requst;
         return this;
     }
 

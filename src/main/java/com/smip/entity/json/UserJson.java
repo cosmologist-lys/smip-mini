@@ -30,7 +30,7 @@ public class UserJson {
         this._isvalid = conJson.getKeycore().is_isvalid();
         this._comtick++;
         this._userlimits = conJson.getKeycore().get_userlimits();
-        this.lastReqtime = conJson.getRequst().getReqtime();
+        this.lastReqtime = conJson.getRequest().getReqtime();
         //this.uris.add(conJson.getRequst().getUri());
         if (secuser != null) {
             this.secuser = secuser;

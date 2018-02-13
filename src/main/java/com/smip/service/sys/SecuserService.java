@@ -55,13 +55,8 @@ public interface SecuserService extends BaseService<Secuser> {
      */
     default boolean validToken(String token) {
         Map map = SysConst.SYS_SECUSER_TOKEN;
-        if (Q.notNull(map)) {
-            UserJson userJson = (UserJson) map.get(token);
-            if (Q.notNull(userJson)) {
-                return true;
-            }
-        }
-        return false;
+        return Q.notNull(map) ?
+                Q.notNull((UserJson) map.get(token)) : false;
     }
 
     /**
@@ -73,7 +68,7 @@ public interface SecuserService extends BaseService<Secuser> {
     default void saveToken(UserJson userJson, ConJson conJson) {
         UserJson newJson = new UserJson(conJson, userJson.getSecuser());
         ArrayList list = new ArrayList();
-        list.add(conJson.getRequst().getUri());
+        list.add(conJson.getRequest().getUri());
         newJson.setUris(list);
         SysConst.SYS_SECUSER_TOKEN.put(
                 userJson.get_token(), newJson);
@@ -89,7 +84,7 @@ public interface SecuserService extends BaseService<Secuser> {
         try {
             userJson.set_comtick(userJson.get_comtick() + 1)
                     .setLastReqtime(Q.getDateString(new Date(), DateFmt.CUST))
-                    .getUris().add(conJson.getRequst().getUri());
+                    .getUris().add(conJson.getRequest().getUri());
         } catch (Exception e) {
             e.printStackTrace();
         }
